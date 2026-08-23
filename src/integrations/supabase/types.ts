@@ -14,16 +14,261 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bitacora: {
+        Row: {
+          accion: string
+          antes: string | null
+          autor_id: string | null
+          creado_en: string
+          despues: string | null
+          funcionalidad_id: string | null
+          id: number
+        }
+        Insert: {
+          accion: string
+          antes?: string | null
+          autor_id?: string | null
+          creado_en?: string
+          despues?: string | null
+          funcionalidad_id?: string | null
+          id?: number
+        }
+        Update: {
+          accion?: string
+          antes?: string | null
+          autor_id?: string | null
+          creado_en?: string
+          despues?: string | null
+          funcionalidad_id?: string | null
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bitacora_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bitacora_funcionalidad_id_fkey"
+            columns: ["funcionalidad_id"]
+            isOneToOne: false
+            referencedRelation: "funcionalidades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comentarios: {
+        Row: {
+          autor_id: string
+          creado_en: string
+          cuerpo: string
+          funcionalidad_id: string
+          id: string
+        }
+        Insert: {
+          autor_id: string
+          creado_en?: string
+          cuerpo: string
+          funcionalidad_id: string
+          id?: string
+        }
+        Update: {
+          autor_id?: string
+          creado_en?: string
+          cuerpo?: string
+          funcionalidad_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comentarios_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comentarios_funcionalidad_id_fkey"
+            columns: ["funcionalidad_id"]
+            isOneToOne: false
+            referencedRelation: "funcionalidades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      funcionalidades: {
+        Row: {
+          codigo: string
+          detalle: string | null
+          horas: number | null
+          id: string
+          orden: number
+          proyecto_id: string
+          titulo: string
+        }
+        Insert: {
+          codigo: string
+          detalle?: string | null
+          horas?: number | null
+          id?: string
+          orden?: number
+          proyecto_id: string
+          titulo: string
+        }
+        Update: {
+          codigo?: string
+          detalle?: string | null
+          horas?: number | null
+          id?: string
+          orden?: number
+          proyecto_id?: string
+          titulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "funcionalidades_proyecto_id_fkey"
+            columns: ["proyecto_id"]
+            isOneToOne: false
+            referencedRelation: "proyectos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invitados: {
+        Row: {
+          email: string
+          lado: Database["public"]["Enums"]["org_side"]
+          nombre: string | null
+        }
+        Insert: {
+          email: string
+          lado: Database["public"]["Enums"]["org_side"]
+          nombre?: string | null
+        }
+        Update: {
+          email?: string
+          lado?: Database["public"]["Enums"]["org_side"]
+          nombre?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          creado_en: string
+          email: string
+          id: string
+          lado: Database["public"]["Enums"]["org_side"]
+          nombre: string | null
+        }
+        Insert: {
+          creado_en?: string
+          email: string
+          id: string
+          lado?: Database["public"]["Enums"]["org_side"]
+          nombre?: string | null
+        }
+        Update: {
+          creado_en?: string
+          email?: string
+          id?: string
+          lado?: Database["public"]["Enums"]["org_side"]
+          nombre?: string | null
+        }
+        Relationships: []
+      }
+      proyectos: {
+        Row: {
+          bajada: string | null
+          color: string
+          descripcion: string | null
+          id: string
+          nombre: string
+          orden: number
+          slug: string
+        }
+        Insert: {
+          bajada?: string | null
+          color: string
+          descripcion?: string | null
+          id?: string
+          nombre: string
+          orden?: number
+          slug: string
+        }
+        Update: {
+          bajada?: string | null
+          color?: string
+          descripcion?: string | null
+          id?: string
+          nombre?: string
+          orden?: number
+          slug?: string
+        }
+        Relationships: []
+      }
+      validaciones: {
+        Row: {
+          actualizado_en: string
+          actualizado_por: string | null
+          estado: Database["public"]["Enums"]["estado_funcionalidad"]
+          funcionalidad_id: string
+        }
+        Insert: {
+          actualizado_en?: string
+          actualizado_por?: string | null
+          estado?: Database["public"]["Enums"]["estado_funcionalidad"]
+          funcionalidad_id: string
+        }
+        Update: {
+          actualizado_en?: string
+          actualizado_por?: string | null
+          estado?: Database["public"]["Enums"]["estado_funcionalidad"]
+          funcionalidad_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "validaciones_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "validaciones_funcionalidad_id_fkey"
+            columns: ["funcionalidad_id"]
+            isOneToOne: true
+            referencedRelation: "funcionalidades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      asegurar_perfil: {
+        Args: never
+        Returns: {
+          creado_en: string
+          email: string
+          id: string
+          lado: Database["public"]["Enums"]["org_side"]
+          nombre: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
-      [_ in never]: never
+      estado_funcionalidad: "pendiente" | "validado" | "con_cambios" | "no_va"
+      org_side: "dac" | "digital_builders"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +395,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      estado_funcionalidad: ["pendiente", "validado", "con_cambios", "no_va"],
+      org_side: ["dac", "digital_builders"],
+    },
   },
 } as const
