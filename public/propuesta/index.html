@@ -94,6 +94,87 @@
     .floaty,.pulse-dot{animation:none}
     .acc-panel{transition:none}
   }
+
+  /* ══════════════ CAPA DE MOVIMIENTO ══════════════ */
+
+  /* Reveal por líneas: cada línea sube desde su propia máscara */
+  .split .ln{display:block;overflow:hidden;padding-bottom:.06em}
+  .split .ln>i{display:block;font-style:inherit;transform:translateY(115%);
+    transition:transform 1.05s cubic-bezier(.16,1,.3,1);transition-delay:var(--ld,0ms);will-change:transform}
+  .split.in .ln>i{transform:none}
+  /* grad-text recorta el fondo contra el texto; al partir en lineas hay que
+     recrear el degradado en cada linea y correrlo a su posicion original */
+  .grad-text.split .ln>i{
+    background-image:linear-gradient(180deg,#fff 0%,#fff 45%,rgba(255,255,255,.68) 100%);
+    background-size:100% var(--bh,100%);background-position:0 calc(-1*var(--lt,0px));
+    background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* Reveal con máscara vertical */
+  .wipe{clip-path:inset(0 0 100% 0);transition:clip-path 1.15s cubic-bezier(.16,1,.3,1);transition-delay:var(--d,0ms)}
+  .in .wipe,.wipe.in{clip-path:inset(0 0 0 0)}
+
+  /* Entrada del número grande: del desenfoque al foco */
+  .zoomin{opacity:0;transform:scale(.94);filter:blur(14px);
+    transition:opacity .9s ease,transform 1.3s cubic-bezier(.16,1,.3,1),filter 1.1s ease}
+  .zoomin.in{opacity:1;transform:none;filter:blur(0)}
+
+  /* Parallax */
+  .par{will-change:transform}
+  .par-img{transform:scale(1.14) translate3d(0,var(--py,0px),0)}
+
+  /* Spotlight que sigue al cursor */
+  #spot{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .8s ease;
+    background:radial-gradient(560px circle at var(--sx,50%) var(--sy,50%),rgba(125,170,255,.075),transparent 62%)}
+  #spot.on{opacity:1}
+
+  /* Cinta cinética entre secciones */
+  .ribbon{position:relative;overflow:hidden;padding:3rem 0;opacity:.72;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+  .ribbon-track{display:flex;align-items:center;gap:2rem;width:max-content;will-change:transform}
+  .ribbon-item{display:flex;align-items:center;gap:2rem;white-space:nowrap;
+    font-size:clamp(1.4rem,3.6vw,2.5rem);font-weight:800;letter-spacing:-.04em;line-height:1}
+  .hollow{color:transparent;-webkit-text-stroke:1px hsla(0,0%,100%,.16)}
+  .ribbon-dot{width:.42em;height:.42em;border-radius:9999px;flex:none}
+
+  /* Índice lateral de secciones */
+  #dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:55;
+    display:none;flex-direction:column;gap:15px}
+  @media (min-width:1280px){#dots{display:flex}}
+  #dots button{position:relative;width:9px;height:9px;border-radius:9999px;
+    background:hsla(0,0%,100%,.16);transition:background .45s ease,transform .45s cubic-bezier(.16,1,.3,1),box-shadow .45s ease}
+  #dots button:hover{background:hsla(0,0%,100%,.42)}
+  #dots button.on{background:#10B981;transform:scale(1.4);box-shadow:0 0 0 5px rgba(16,185,129,.12)}
+  #dots button>span{position:absolute;right:20px;top:50%;transform:translateY(-50%) translateX(8px);
+    opacity:0;pointer-events:none;white-space:nowrap;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:hsla(0,0%,100%,.6);transition:opacity .35s ease,transform .35s cubic-bezier(.16,1,.3,1)}
+  #dots button:hover>span{opacity:1;transform:translateY(-50%)}
+
+  /* Timeline del roadmap que se dibuja al scrollear */
+  .rail-fill{transform-origin:left center;transform:scaleX(var(--p,0))}
+  .rail-fill-v{transform-origin:top center;transform:scaleY(var(--p,0))}
+  .tl-dot{transform:scale(.5);opacity:.3;
+    transition:transform .7s cubic-bezier(.34,1.56,.64,1),opacity .5s ease}
+  .tl-dot.lit{transform:scale(1);opacity:1}
+
+  /* Salida del overlay de acceso */
+  #gate{transition:opacity .7s ease,transform .9s cubic-bezier(.16,1,.3,1),filter .7s ease}
+  #gate.out{opacity:0;transform:scale(1.05);filter:blur(12px)}
+
+  /* Botones magnéticos */
+  .mag{will-change:transform}
+
+  @media (prefers-reduced-motion: reduce){
+    .split .ln>i{transform:none!important;transition:none!important}
+    .wipe{clip-path:none!important;transition:none!important}
+    .zoomin{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
+    .par,.par-img{transform:none!important}
+    .rail-fill,.rail-fill-v{transform:none!important}
+    .tl-dot{transform:none!important;opacity:1!important}
+    #spot{display:none}
+    .ribbon-track{transform:none!important}
+    #gate{transition:opacity .2s ease}
+  }
 </style>
 </head>
 
@@ -159,6 +240,7 @@
   </div>
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
+  <div id="spot" aria-hidden="true"></div>
 
   <!-- progreso -->
   <div class="fixed top-0 left-0 right-0 z-[70] h-[2px] bg-transparent">
@@ -207,6 +289,9 @@
     </div>
   </header>
 
+  <!-- indice lateral (se puebla por JS) -->
+  <nav id="dots" aria-label="Secciones"></nav>
+
   <main class="relative z-10">
 
   <!-- ═══════════ 1 · HERO ═══════════ -->
@@ -218,7 +303,7 @@
         <span class="font-mono text-[10px] sm:text-[11px] eyebrow text-white/55">Documento confidencial · 2026</span>
       </div>
 
-      <h1 class="reveal mt-8 sm:mt-10 display grad-text text-[clamp(2.6rem,11.5vw,7.5rem)] max-w-[16ch]" style="--d:80ms">
+      <h1 data-split class="mt-8 sm:mt-10 display grad-text text-[clamp(2.6rem,11.5vw,7.5rem)] max-w-[16ch]" style="--d:80ms">
         Propuesta<br class="hidden sm:block" /> Técnica y<br /> Comercial
       </h1>
 
@@ -229,7 +314,7 @@
         <span class="inline-flex items-center gap-2 rounded-full border border-intra/25 bg-intra/[0.09] px-3.5 py-2 text-[13px] sm:text-sm text-white/85"><span class="w-1.5 h-1.5 rounded-full bg-intra"></span>Intranet</span>
       </div>
 
-      <div class="reveal mt-10 sm:mt-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8" style="--d:260ms">
+      <div class="reveal mt-10 sm:mt-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8" data-par="0.06" style="--d:260ms">
         <div>
           <p class="font-mono text-[10px] eyebrow text-white/35">Preparada por</p>
           <p class="mt-2.5 text-[26px] sm:text-3xl font-semibold tracking-tight text-white">Digital Builders</p>
@@ -237,7 +322,7 @@
         </div>
 
         <a href="#resumen" data-scroll
-          class="group inline-flex items-center justify-center gap-3 rounded-2xl bg-white text-ink font-semibold text-[15px] px-7 py-4 transition hover:bg-white/90 active:scale-[.985] w-full sm:w-auto">
+          class="mag group inline-flex items-center justify-center gap-3 rounded-2xl bg-white text-ink font-semibold text-[15px] px-7 py-4 transition hover:bg-white/90 active:scale-[.985] w-full sm:w-auto">
           Ver la propuesta
           <svg class="transition-transform duration-300 group-hover:translate-y-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
         </a>
@@ -261,7 +346,7 @@
       </div>
 
       <div class="mt-9 grid lg:grid-cols-12 gap-10 lg:gap-16">
-        <h2 class="reveal lg:col-span-5 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+        <h2 data-split class="lg:col-span-5 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
           Cuatro plataformas,<br />un solo plan.
         </h2>
 
@@ -314,6 +399,15 @@
     </div>
   </section>
 
+
+  <!-- cinta cinetica: se mueve sola y acelera con el scroll -->
+  <div class="ribbon" aria-hidden="true">
+    <div class="ribbon-track">
+      <span class="ribbon-item"><span class="ribbon-dot" style="background:#3B82F6"></span><span class="hollow">DAC</span><span class="ribbon-dot" style="background:#F97316"></span><span class="text-white/55">Grupo Agencia</span><span class="ribbon-dot" style="background:#F5A524"></span><span class="hollow">Sumate</span><span class="ribbon-dot" style="background:#8B5CF6"></span><span class="text-white/55">Intranet</span></span>
+      <span class="ribbon-item"><span class="ribbon-dot" style="background:#3B82F6"></span><span class="hollow">DAC</span><span class="ribbon-dot" style="background:#F97316"></span><span class="text-white/55">Grupo Agencia</span><span class="ribbon-dot" style="background:#F5A524"></span><span class="hollow">Sumate</span><span class="ribbon-dot" style="background:#8B5CF6"></span><span class="text-white/55">Intranet</span></span>
+    </div>
+  </div>
+
   <!-- ═══════════ 3 · LOS 4 PROYECTOS ═══════════ -->
   <section id="proyectos" class="relative py-24 sm:py-32">
     <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
@@ -325,7 +419,7 @@
       </div>
 
       <div class="mt-9 grid lg:grid-cols-12 gap-6 items-end">
-        <h2 class="reveal lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+        <h2 data-split class="lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
           Cada plataforma,<br />con identidad propia.
         </h2>
         <p class="reveal lg:col-span-5 text-[15px] leading-relaxed text-white/45" style="--d:100ms">
@@ -341,7 +435,7 @@
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-dac/70 to-transparent"></div>
           <div class="absolute -top-24 -left-16 w-72 h-72 rounded-full bg-dac/20 blur-[90px] pointer-events-none"></div>
 
-          <div class="relative p-6 sm:p-9 lg:p-12">
+          <div class="wipe relative p-6 sm:p-9 lg:p-12">
             <div class="flex flex-wrap items-center gap-3">
               <span class="font-mono text-[10px] eyebrow text-dac">Proyecto 01</span>
               <span class="h-px w-6 bg-white/15"></span>
@@ -358,7 +452,7 @@
 
               <div class="lg:col-span-7">
                 <figure class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
-                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio DAC (pendiente)" class="w-full h-auto block"
+                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio DAC (pendiente)" class="w-full h-auto block par-img"
                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A0C13'/%3E%3Cstop offset='1' stop-color='%233B82F6' stop-opacity='.22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3Cg fill='%23FFFFFF' fill-opacity='.055'%3E%3Crect x='80' y='80' width='300' height='28' rx='14'/%3E%3Crect x='80' y='150' width='820' height='64' rx='16'/%3E%3Crect x='80' y='240' width='640' height='22' rx='11'/%3E%3Crect x='80' y='284' width='520' height='22' rx='11'/%3E%3Crect x='80' y='380' width='420' height='190' rx='22'/%3E%3Crect x='540' y='380' width='420' height='190' rx='22'/%3E%3Crect x='1000' y='380' width='420' height='190' rx='22'/%3E%3C/g%3E%3Crect x='1000' y='80' width='420' height='230' rx='26' fill='%233B82F6' fill-opacity='.16'/%3E%3Ctext x='800' y='650' text-anchor='middle' font-family='monospace' font-size='27' fill='%236B7280'%3E[PENDIENTE: maqueta panoramica]%3C/text%3E%3C/svg%3E" />
                 </figure>
               </div>
@@ -391,7 +485,7 @@
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ga/70 to-transparent"></div>
           <div class="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-ga/20 blur-[90px] pointer-events-none"></div>
 
-          <div class="relative p-6 sm:p-9 lg:p-12">
+          <div class="wipe relative p-6 sm:p-9 lg:p-12">
             <div class="flex flex-wrap items-center gap-3">
               <span class="font-mono text-[10px] eyebrow text-ga">Proyecto 02</span>
               <span class="h-px w-6 bg-white/15"></span>
@@ -408,7 +502,7 @@
 
               <div class="lg:col-span-7">
                 <figure class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
-                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio Grupo Agencia (pendiente)" class="w-full h-auto block"
+                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio Grupo Agencia (pendiente)" class="w-full h-auto block par-img"
                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A0C13'/%3E%3Cstop offset='1' stop-color='%23F97316' stop-opacity='.22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3Cg fill='%23FFFFFF' fill-opacity='.055'%3E%3Crect x='80' y='80' width='300' height='28' rx='14'/%3E%3Crect x='80' y='150' width='760' height='64' rx='16'/%3E%3Crect x='80' y='240' width='600' height='22' rx='11'/%3E%3Crect x='80' y='380' width='640' height='190' rx='22'/%3E%3Crect x='760' y='380' width='300' height='190' rx='22'/%3E%3Crect x='1100' y='380' width='320' height='190' rx='22'/%3E%3C/g%3E%3Crect x='920' y='80' width='500' height='240' rx='26' fill='%23F97316' fill-opacity='.16'/%3E%3Ctext x='800' y='650' text-anchor='middle' font-family='monospace' font-size='27' fill='%236B7280'%3E[PENDIENTE: maqueta panoramica]%3C/text%3E%3C/svg%3E" />
                 </figure>
               </div>
@@ -441,7 +535,7 @@
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sumate/70 to-transparent"></div>
           <div class="absolute -top-24 -left-16 w-72 h-72 rounded-full bg-sumate/20 blur-[90px] pointer-events-none"></div>
 
-          <div class="relative p-6 sm:p-9 lg:p-12">
+          <div class="wipe relative p-6 sm:p-9 lg:p-12">
             <div class="flex flex-wrap items-center gap-3">
               <span class="font-mono text-[10px] eyebrow text-sumate">Proyecto 03</span>
               <span class="h-px w-6 bg-white/15"></span>
@@ -458,7 +552,7 @@
 
               <div class="lg:col-span-7">
                 <figure class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
-                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio Sumate (pendiente)" class="w-full h-auto block"
+                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio Sumate (pendiente)" class="w-full h-auto block par-img"
                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A0C13'/%3E%3Cstop offset='1' stop-color='%23F5A524' stop-opacity='.22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3Cg fill='%23FFFFFF' fill-opacity='.055'%3E%3Crect x='80' y='80' width='260' height='28' rx='14'/%3E%3Crect x='80' y='150' width='700' height='64' rx='16'/%3E%3Crect x='80' y='240' width='560' height='22' rx='11'/%3E%3Crect x='80' y='300' width='260' height='52' rx='26'/%3E%3Crect x='80' y='410' width='1340' height='170' rx='24'/%3E%3C/g%3E%3Crect x='860' y='80' width='560' height='270' rx='26' fill='%23F5A524' fill-opacity='.16'/%3E%3Ctext x='800' y='655' text-anchor='middle' font-family='monospace' font-size='27' fill='%236B7280'%3E[PENDIENTE: maqueta panoramica]%3C/text%3E%3C/svg%3E" />
                 </figure>
               </div>
@@ -490,7 +584,7 @@
           <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-intra/70 to-transparent"></div>
           <div class="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-intra/20 blur-[90px] pointer-events-none"></div>
 
-          <div class="relative p-6 sm:p-9 lg:p-12">
+          <div class="wipe relative p-6 sm:p-9 lg:p-12">
             <div class="flex flex-wrap items-center gap-3">
               <span class="font-mono text-[10px] eyebrow text-intra">Proyecto 04</span>
               <span class="h-px w-6 bg-white/15"></span>
@@ -507,7 +601,7 @@
 
               <div class="lg:col-span-7">
                 <figure class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
-                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica de la Intranet (pendiente)" class="w-full h-auto block"
+                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica de la Intranet (pendiente)" class="w-full h-auto block par-img"
                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A0C13'/%3E%3Cstop offset='1' stop-color='%238B5CF6' stop-opacity='.22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3Cg fill='%23FFFFFF' fill-opacity='.055'%3E%3Crect x='80' y='80' width='260' height='540' rx='24'/%3E%3Crect x='390' y='80' width='1030' height='70' rx='18'/%3E%3Crect x='390' y='185' width='500' height='200' rx='22'/%3E%3Crect x='920' y='185' width='500' height='200' rx='22'/%3E%3Crect x='390' y='420' width='1030' height='200' rx='22'/%3E%3C/g%3E%3Crect x='390' y='185' width='500' height='200' rx='22' fill='%238B5CF6' fill-opacity='.14'/%3E%3Ctext x='905' y='665' text-anchor='middle' font-family='monospace' font-size='26' fill='%236B7280'%3E[PENDIENTE: maqueta panoramica]%3C/text%3E%3C/svg%3E" />
                 </figure>
               </div>
@@ -548,7 +642,7 @@
       </div>
 
       <div class="mt-9 grid lg:grid-cols-12 gap-6 items-end">
-        <h2 class="reveal lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+        <h2 data-split class="lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
           Método simple,<br />control total.
         </h2>
         <p class="reveal lg:col-span-5 text-[15px] leading-relaxed text-white/45" style="--d:100ms">
@@ -658,7 +752,7 @@
       </div>
 
       <div class="mt-9 grid lg:grid-cols-12 gap-6 items-end">
-        <h2 class="reveal lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+        <h2 data-split class="lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
           Cinco meses.<br />Cinco entregas.
         </h2>
         <p class="reveal lg:col-span-5 text-[15px] leading-relaxed text-white/45" style="--d:100ms">
@@ -678,16 +772,16 @@
       <!-- Timeline -->
       <div class="mt-10 sm:mt-14 relative">
         <!-- riel horizontal (desktop) -->
-        <div class="hidden lg:block absolute left-0 right-0 top-[15px] h-px bg-gradient-to-r from-dac/50 via-db/40 to-white/5"></div>
+        <div id="rail-h" class="rail-fill hidden lg:block absolute left-0 right-0 top-[15px] h-px bg-gradient-to-r from-dac/50 via-db/40 to-white/5"></div>
         <!-- riel vertical (mobile) -->
-        <div class="lg:hidden absolute left-[15px] top-3 bottom-3 w-px bg-gradient-to-b from-dac/50 via-db/40 to-white/5"></div>
+        <div id="rail-v" class="rail-fill-v lg:hidden absolute left-[15px] top-3 bottom-3 w-px bg-gradient-to-b from-dac/50 via-db/40 to-white/5"></div>
 
         <ol class="relative grid grid-cols-1 lg:grid-cols-6 gap-5 lg:gap-4">
 
           <!-- MES 1 -->
           <li class="reveal relative pl-11 lg:pl-0" style="--d:0ms">
             <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
-              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dac/40 ring-4 ring-ink">
+              <span class="tl-dot grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dac/40 ring-4 ring-ink">
                 <span class="w-2 h-2 rounded-full bg-dac"></span>
               </span>
             </div>
@@ -709,7 +803,7 @@
           <!-- MES 2 -->
           <li class="reveal relative pl-11 lg:pl-0" style="--d:90ms">
             <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
-              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dac/40 ring-4 ring-ink">
+              <span class="tl-dot grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dac/40 ring-4 ring-ink">
                 <span class="w-2 h-2 rounded-full bg-dac"></span>
               </span>
             </div>
@@ -731,7 +825,7 @@
           <!-- MES 3 -->
           <li class="reveal relative pl-11 lg:pl-0" style="--d:180ms">
             <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
-              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-ga/40 ring-4 ring-ink">
+              <span class="tl-dot grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-ga/40 ring-4 ring-ink">
                 <span class="w-2 h-2 rounded-full bg-ga"></span>
               </span>
             </div>
@@ -753,7 +847,7 @@
           <!-- MES 4 -->
           <li class="reveal relative pl-11 lg:pl-0" style="--d:270ms">
             <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
-              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-sumate/40 ring-4 ring-ink">
+              <span class="tl-dot grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-sumate/40 ring-4 ring-ink">
                 <span class="w-2 h-2 rounded-full bg-sumate"></span>
               </span>
             </div>
@@ -775,7 +869,7 @@
           <!-- MES 5 -->
           <li class="reveal relative pl-11 lg:pl-0" style="--d:360ms">
             <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
-              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-db/50 ring-4 ring-ink">
+              <span class="tl-dot grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-db/50 ring-4 ring-ink">
                 <span class="w-2 h-2 rounded-full bg-db pulse-dot"></span>
               </span>
             </div>
@@ -798,7 +892,7 @@
           <!-- MES 6 · colchón -->
           <li class="reveal relative pl-11 lg:pl-0 opacity-45 hover:opacity-70 transition-opacity duration-500" style="--d:450ms">
             <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
-              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dashed border-white/25 ring-4 ring-ink">
+              <span class="tl-dot grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dashed border-white/25 ring-4 ring-ink">
                 <span class="w-2 h-2 rounded-full bg-white/30"></span>
               </span>
             </div>
@@ -832,7 +926,7 @@
       </div>
 
       <div class="mt-9 grid lg:grid-cols-12 gap-6 items-end">
-        <h2 class="reveal lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+        <h2 data-split class="lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
           Después del lanzamiento,<br />seguimos acá.
         </h2>
         <p class="reveal lg:col-span-5 text-[15px] leading-relaxed text-white/45" style="--d:100ms">
@@ -976,6 +1070,15 @@
     </div>
   </section>
 
+
+  <!-- cinta cinetica: se mueve sola y acelera con el scroll -->
+  <div class="ribbon" aria-hidden="true">
+    <div class="ribbon-track">
+      <span class="ribbon-item"><span class="ribbon-dot" style="background:#10B981"></span><span class="hollow">Entregables cada 30 días</span><span class="ribbon-dot" style="background:#3B82F6"></span><span class="text-white/55">UAT firmado por módulo</span><span class="ribbon-dot" style="background:#8B5CF6"></span><span class="hollow">Testing en 3 capas</span><span class="ribbon-dot" style="background:#F97316"></span><span class="text-white/55">Producción en 5 meses</span></span>
+      <span class="ribbon-item"><span class="ribbon-dot" style="background:#10B981"></span><span class="hollow">Entregables cada 30 días</span><span class="ribbon-dot" style="background:#3B82F6"></span><span class="text-white/55">UAT firmado por módulo</span><span class="ribbon-dot" style="background:#8B5CF6"></span><span class="hollow">Testing en 3 capas</span><span class="ribbon-dot" style="background:#F97316"></span><span class="text-white/55">Producción en 5 meses</span></span>
+    </div>
+  </div>
+
   <!-- ═══════════ 7 · INVERSIÓN ═══════════ -->
   <section id="inversion" class="relative py-24 sm:py-32">
     <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
@@ -993,7 +1096,7 @@
         <div class="relative grid lg:grid-cols-12 gap-10 items-center">
           <div class="lg:col-span-7">
             <p class="font-mono text-[10px] eyebrow text-white/35">Inversión total del proyecto</p>
-            <p class="mt-6 display text-[clamp(1.9rem,7vw,3.8rem)] pending leading-[1.08]">[PENDIENTE: USD XX.XXX + IVA]</p>
+            <p class="zoomin mt-6 display text-[clamp(1.9rem,7vw,3.8rem)] pending leading-[1.08]">[PENDIENTE: USD XX.XXX + IVA]</p>
             <p class="mt-6 text-[15px] leading-relaxed text-white/45 max-w-lg">
               Incluye las cuatro plataformas, el design system compartido, las pruebas de aceptación, el pasaje a producción y la capacitación del equipo de DAC.
             </p>
@@ -1196,7 +1299,7 @@
 
   /* ─── Reveal on scroll ─── */
   function initReveal() {
-    var els = document.querySelectorAll('.reveal, .reveal-x');
+    var els = document.querySelectorAll('.reveal, .reveal-x, .split, .zoomin');
     if (!('IntersectionObserver' in window)) {
       els.forEach(function (el) { el.classList.add('in'); });
       return;
@@ -1329,28 +1432,269 @@
     });
   }
 
+
+  /* ══════════════ CAPA DE MOVIMIENTO ══════════════
+     Un unico bucle rAF. En cada frame se leen posiciones primero y se
+     escriben transforms despues, para no alternar lectura/escritura del
+     layout. Todo se apaga con prefers-reduced-motion. */
+
+  var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var FINE   = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+  /* ─── Partir titulares en lineas ─── */
+  function splitInto(el) {
+    if (el.dataset.splitDone === '1') return;
+    if (el.__orig == null) el.__orig = el.innerHTML;
+    var words = [];
+    Array.prototype.forEach.call(el.childNodes, function (n) {
+      if (n.nodeType === 3) {
+        n.textContent.split(/(\s+)/).forEach(function (t) {
+          if (!t.trim()) { words.push({ space: true }); return; }
+          words.push({ text: t });
+        });
+      } else if (n.nodeName === 'BR') {
+        words.push({ br: true, cls: n.className });
+      } else {
+        words.push({ html: n.outerHTML });
+      }
+    });
+
+    // 1) render plano con cada palabra en su span, para medir lineas reales
+    var probe = document.createElement('div');
+    probe.innerHTML = words.map(function (w) {
+      if (w.space) return ' ';
+      if (w.br) return '<br class="' + (w.cls || '') + '">';
+      if (w.html) return w.html;
+      return '<span data-w>' + w.text + '</span>';
+    }).join('');
+    el.textContent = '';
+    while (probe.firstChild) el.appendChild(probe.firstChild);
+
+    // 2) agrupar por offsetTop
+    var spans = el.querySelectorAll('[data-w]');
+    if (!spans.length) { el.dataset.splitDone = '1'; return; }
+    var lines = [], last = null;
+    Array.prototype.forEach.call(spans, function (s) {
+      var top = s.offsetTop;
+      if (last === null || Math.abs(top - last) > 4) { lines.push([]); last = top; }
+      lines[lines.length - 1].push(s);
+    });
+
+    // 3) envolver cada linea en su mascara
+    lines.forEach(function (line, i) {
+      var wrap = document.createElement('span');
+      wrap.className = 'ln';
+      var inner = document.createElement('i');
+      inner.style.setProperty('--ld', (i * 95) + 'ms');
+      line[0].parentNode.insertBefore(wrap, line[0]);
+      wrap.appendChild(inner);
+      line.forEach(function (s, j) {
+        if (j > 0) inner.appendChild(document.createTextNode(' '));
+        inner.appendChild(document.createTextNode(s.textContent));
+        s.parentNode.removeChild(s);
+      });
+    });
+    // limpiar los <br> y espacios sueltos que quedaron entre lineas
+    Array.prototype.forEach.call(el.childNodes, function (n) {
+      if (n.nodeType === 3 || n.nodeName === 'BR') n.textContent = '';
+    });
+    Array.prototype.slice.call(el.querySelectorAll('br')).forEach(function (b) { b.remove(); });
+    // reposicionar el degradado de cada linea (grad-text)
+    if (el.classList.contains('grad-text')) {
+      // offsetTop es relativo al offsetParent, no al titular: hay que medir
+      // contra el rect del propio elemento para ubicar cada linea
+      var base = el.getBoundingClientRect();
+      Array.prototype.forEach.call(el.querySelectorAll('.ln'), function (w) {
+        var inner = w.firstChild;
+        if (!inner || !inner.style) return;
+        inner.style.setProperty('--lt', Math.round(w.getBoundingClientRect().top - base.top) + 'px');
+        inner.style.setProperty('--bh', Math.round(base.height) + 'px');
+      });
+    }
+
+    el.dataset.splitDone = '1';
+  }
+
+  function initSplit() {
+    var els = Array.prototype.slice.call(document.querySelectorAll('[data-split]'));
+    els.forEach(function (el) { el.classList.add('split'); splitInto(el); });
+
+    var w = window.innerWidth, t;
+    window.addEventListener('resize', function () {
+      if (window.innerWidth === w) return;      // ignorar cambios solo de alto (barra del navegador)
+      w = window.innerWidth;
+      clearTimeout(t);
+      t = setTimeout(function () {
+        els.forEach(function (el) {
+          if (el.__orig == null) return;
+          el.innerHTML = el.__orig;
+          el.dataset.splitDone = '';
+          splitInto(el);
+        });
+      }, 180);
+    }, { passive: true });
+  }
+
+  /* ─── Spotlight ─── */
+  function initSpotlight() {
+    if (!FINE || REDUCE) return;
+    var spot = document.getElementById('spot');
+    if (!spot) return;
+    window.addEventListener('pointermove', function (e) {
+      spot.classList.add('on');
+      spot.style.setProperty('--sx', e.clientX + 'px');
+      spot.style.setProperty('--sy', e.clientY + 'px');
+    }, { passive: true });
+  }
+
+  /* ─── Botones magneticos ─── */
+  function initMagnetic() {
+    if (!FINE || REDUCE) return;
+    document.querySelectorAll('.mag').forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+        var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+        el.style.transform = 'translate3d(' + (dx * 14).toFixed(2) + 'px,' + (dy * 10).toFixed(2) + 'px,0)';
+      });
+      el.addEventListener('pointerleave', function () { el.style.transform = ''; });
+    });
+  }
+
+  /* ─── Indice lateral de secciones ─── */
+  function initDots() {
+    var wrap = document.getElementById('dots');
+    if (!wrap) return null;
+    var ids = ['inicio', 'resumen', 'proyectos', 'metodologia', 'roadmap', 'mantenimiento', 'inversion', 'cierre'];
+    var names = ['Inicio', 'Resumen', 'Proyectos', 'Cómo trabajamos', 'Roadmap', 'Mantenimiento', 'Inversión', 'Contacto'];
+    ids.forEach(function (id, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Ir a ' + names[i]);
+      b.innerHTML = '<span>' + names[i] + '</span>';
+      b.addEventListener('click', function () {
+        var t = document.getElementById(id);
+        if (t) t.scrollIntoView({ behavior: REDUCE ? 'auto' : 'smooth', block: 'start' });
+      });
+      wrap.appendChild(b);
+    });
+    return { els: wrap.querySelectorAll('button'), secs: ids.map(function (i) { return document.getElementById(i); }) };
+  }
+
+  /* ─── Bucle principal ─── */
+  function initMotion() {
+    var dots     = initDots();
+    var pars     = Array.prototype.slice.call(document.querySelectorAll('[data-par]'));
+    var imgs     = Array.prototype.slice.call(document.querySelectorAll('.par-img'));
+    var tracks   = Array.prototype.slice.call(document.querySelectorAll('.ribbon-track'));
+    var railH    = document.getElementById('rail-h');
+    var railV    = document.getElementById('rail-v');
+    var tlDots   = Array.prototype.slice.call(document.querySelectorAll('.tl-dot'));
+    var roadmap  = document.getElementById('roadmap');
+
+    if (REDUCE) { tlDots.forEach(function (d) { d.classList.add('lit'); }); return; }
+
+    var offsets = tracks.map(function () { return 0; });
+    var half    = tracks.map(function (t) { return t.scrollWidth / 2; });
+    var lastY   = window.scrollY || 0;
+    var vel     = 0;
+    var lastT   = 0;
+
+    window.addEventListener('resize', function () {
+      half = tracks.map(function (t) { return t.scrollWidth / 2; });
+    }, { passive: true });
+
+    function frame(now) {
+      var dt = lastT ? Math.min((now - lastT) / 16.667, 3) : 1;
+      lastT = now;
+
+      var vh = window.innerHeight;
+      var y  = window.scrollY || 0;
+      vel = vel * 0.86 + (y - lastY) * 0.14;
+      lastY = y;
+
+      // ── LECTURAS ──
+      var parRects = pars.map(function (el) { return el.getBoundingClientRect(); });
+      var imgRects = imgs.map(function (el) { return el.getBoundingClientRect(); });
+      var rmRect   = roadmap ? roadmap.getBoundingClientRect() : null;
+      var dotOn    = -1;
+      if (dots) {
+        dots.secs.forEach(function (s, i) {
+          if (s && s.getBoundingClientRect().top <= vh * 0.35) dotOn = i;
+        });
+      }
+
+      // ── ESCRITURAS ──
+      pars.forEach(function (el, i) {
+        var r = parRects[i];
+        var p = (r.top + r.height / 2 - vh / 2) / vh;
+        var sp = parseFloat(el.dataset.par) || 0.1;
+        el.style.transform = 'translate3d(0,' + (-p * sp * 100).toFixed(2) + 'px,0)';
+        if (el.dataset.parFade === '1') {
+          el.style.opacity = Math.max(0, Math.min(1, 1 - Math.max(0, -p) * 1.15)).toFixed(3);
+        }
+      });
+
+      imgs.forEach(function (el, i) {
+        var r = imgRects[i];
+        var p = (r.top + r.height / 2 - vh / 2) / vh;
+        el.style.setProperty('--py', (-p * 26).toFixed(2) + 'px');
+      });
+
+      tracks.forEach(function (t, i) {
+        offsets[i] -= (0.35 + vel * 0.14) * dt;
+        if (half[i] > 0) {
+          if (offsets[i] <= -half[i]) offsets[i] += half[i];
+          if (offsets[i] > 0) offsets[i] -= half[i];
+        }
+        t.style.transform = 'translate3d(' + offsets[i].toFixed(2) + 'px,0,0)';
+      });
+
+      if (rmRect) {
+        var span = rmRect.height - vh * 0.35;
+        var prog = span > 0 ? (vh * 0.75 - rmRect.top) / span : 0;
+        prog = Math.max(0, Math.min(1, prog));
+        if (railH) railH.style.setProperty('--p', prog.toFixed(3));
+        if (railV) railV.style.setProperty('--p', prog.toFixed(3));
+        tlDots.forEach(function (d, i) {
+          d.classList.toggle('lit', prog >= (i + 0.35) / tlDots.length);
+        });
+      }
+
+      if (dots) {
+        dots.els.forEach(function (b, i) { b.classList.toggle('on', i === dotOn); });
+      }
+
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
   /* ─── Arranque del sitio ─── */
   var booted = false;
   function boot() {
     if (booted) return;
     booted = true;
+    initSplit();
     initReveal();
     initCounters();
     initAccordions();
     initNav();
     initMobileMenu();
     initSheen();
+    initSpotlight();
+    initMagnetic();
+    initMotion();
   }
 
   function unlock(instant) {
-    gate.style.transition = 'opacity .5s ease';
     gate.style.opacity = instant ? '0' : '1';
     app.classList.remove('hidden');
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
 
     requestAnimationFrame(function () {
-      gate.style.opacity = '0';
+      gate.classList.add('out');
       boot();
       window.setTimeout(function () { gate.remove(); }, instant ? 0 : 520);
     });
