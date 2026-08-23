@@ -1,0 +1,1427 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex,nofollow" />
+<meta name="googlebot" content="noindex,nofollow" />
+<meta name="referrer" content="no-referrer" />
+<meta name="theme-color" content="#06070B" />
+<title>Propuesta Técnica y Comercial · Digital Builders</title>
+<meta name="description" content="Propuesta técnica y comercial de Digital Builders para DAC, Grupo Agencia, Sumate e Intranet. Documento privado." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink:  '#06070B',
+          ink2: '#0A0C13',
+          dac:    '#3B82F6',
+          ga:     '#F97316',
+          sumate: '#F5A524',
+          intra:  '#8B5CF6',
+          db:     '#10B981'
+        },
+        fontFamily: {
+          sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+          mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  :root { color-scheme: dark; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; -webkit-text-size-adjust: 100%; }
+  body { background:#06070B; overflow-x:hidden; }
+
+  /* ---------- Fondo ambiental ---------- */
+  .bg-aura{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .bg-aura span{position:absolute;display:block;border-radius:9999px;filter:blur(120px);opacity:.32}
+  .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+    background-size:72px 72px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 75%);
+            mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 75%)}
+  .noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.038;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .95s cubic-bezier(.16,1,.3,1),transform .95s cubic-bezier(.16,1,.3,1);transition-delay:var(--d,0ms);will-change:opacity,transform}
+  .reveal.in{opacity:1;transform:none}
+  .reveal-x{opacity:0;transform:translateX(-24px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);transition-delay:var(--d,0ms)}
+  .reveal-x.in{opacity:1;transform:none}
+
+  /* ---------- Glass ---------- */
+  .glass{background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+    -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.09);
+    box-shadow:0 1px 0 0 rgba(255,255,255,.06) inset, 0 30px 60px -30px rgba(0,0,0,.9)}
+  .glass-soft{background:rgba(255,255,255,.035);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.075)}
+  .hair{border-top:1px solid rgba(255,255,255,.07)}
+
+  /* ---------- Tipografía ---------- */
+  .display{letter-spacing:-.045em;line-height:.98;font-weight:800}
+  .grad-text{background:linear-gradient(180deg,#fff 0%,#fff 45%,rgba(255,255,255,.68) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .eyebrow{letter-spacing:.24em;text-transform:uppercase}
+  .pending{color:#6B7280;font-style:italic;font-weight:400}
+
+  /* ---------- Acordeón ---------- */
+  .acc-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.16,1,.3,1),opacity .4s ease;opacity:.4}
+  .acc-panel>div{overflow:hidden;min-height:0}
+  .acc.open .acc-panel{grid-template-rows:1fr;opacity:1}
+  .acc.open .acc-ico{transform:rotate(180deg)}
+  .acc-ico{transition:transform .45s cubic-bezier(.16,1,.3,1)}
+
+  /* ---------- Nav ---------- */
+  .navlink{position:relative;transition:color .3s ease}
+  .navlink::after{content:'';position:absolute;left:0;right:0;bottom:-6px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.16,1,.3,1);opacity:.6}
+  .navlink:hover::after,.navlink.active::after{transform:scaleX(1)}
+  .navlink.active{color:#fff}
+
+  /* ---------- Detalles ---------- */
+  .card-hov{transition:transform .55s cubic-bezier(.16,1,.3,1),border-color .55s ease,box-shadow .55s ease}
+  @media (hover:hover){ .card-hov:hover{transform:translateY(-6px)} }
+  .sheen{position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .6s ease;
+    background:radial-gradient(600px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.09),transparent 40%)}
+  @media (hover:hover){ .card-hov:hover .sheen{opacity:1} }
+
+  ::selection{background:rgba(16,185,129,.32);color:#fff}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:#06070B}
+  ::-webkit-scrollbar-thumb{background:#1e2330;border-radius:9999px;border:2px solid #06070B}
+  ::-webkit-scrollbar-thumb:hover{background:#2b3245}
+
+  .rail::-webkit-scrollbar{height:6px}
+  .rail::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14)}
+
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .floaty{animation:floaty 4.5s ease-in-out infinite}
+  @keyframes pulseDot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.82)}}
+  .pulse-dot{animation:pulseDot 2.4s ease-in-out infinite}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .reveal,.reveal-x{opacity:1!important;transform:none!important;transition:none!important}
+    .floaty,.pulse-dot{animation:none}
+    .acc-panel{transition:none}
+  }
+</style>
+</head>
+
+<body class="bg-ink text-white/90 font-sans antialiased">
+
+<!-- ══════════════════════════ ACCESO ══════════════════════════ -->
+<div id="gate" class="fixed inset-0 z-[100] flex items-center justify-center px-5 bg-ink">
+  <div class="bg-aura" aria-hidden="true">
+    <span style="width:520px;height:520px;top:-140px;left:-120px;background:#3B82F6"></span>
+    <span style="width:460px;height:460px;bottom:-160px;right:-120px;background:#8B5CF6"></span>
+    <span style="width:380px;height:380px;top:40%;left:45%;background:#10B981;opacity:.18"></span>
+  </div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="relative z-10 w-full max-w-md">
+    <div class="glass rounded-[28px] p-7 sm:p-10">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2 h-2 rounded-full bg-db pulse-dot"></span>
+        <span class="font-mono text-[10px] sm:text-[11px] eyebrow text-white/50">Digital&nbsp;Builders</span>
+      </div>
+
+      <h1 class="mt-7 text-[28px] sm:text-4xl display grad-text">Propuesta<br />confidencial</h1>
+      <p class="mt-4 text-sm sm:text-[15px] leading-relaxed text-white/45">
+        Este documento fue preparado exclusivamente para <span class="text-white/75">DAC&nbsp;/ Grupo Agencia</span>.
+        Ingresá la clave de acceso para continuar.
+      </p>
+
+      <form id="gate-form" class="mt-8" autocomplete="off" novalidate>
+        <label for="gate-input" class="font-mono text-[10px] eyebrow text-white/35">Clave de acceso</label>
+        <div class="mt-2.5 relative">
+          <input id="gate-input" type="password" inputmode="text" autocapitalize="characters" spellcheck="false"
+            class="w-full rounded-2xl bg-white/[0.04] border border-white/10 px-4 py-4 pr-12 text-base tracking-[0.2em] font-mono text-white placeholder:text-white/20 outline-none transition focus:border-db/60 focus:bg-white/[0.06] focus:ring-4 focus:ring-db/10"
+            placeholder="••••••••" aria-describedby="gate-error" />
+          <button type="button" id="gate-toggle" aria-label="Mostrar clave"
+            class="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg text-white/35 hover:text-white/70 transition">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <p id="gate-error" class="mt-3 text-[13px] text-red-400/90 h-5 opacity-0 transition-opacity duration-300" role="alert">Clave incorrecta. Intentá nuevamente.</p>
+
+        <button type="submit"
+          class="mt-4 w-full rounded-2xl bg-white text-ink font-semibold text-[15px] py-4 transition hover:bg-white/90 active:scale-[.985] focus:outline-none focus:ring-4 focus:ring-white/20">
+          Ingresar
+        </button>
+      </form>
+
+      <p class="mt-7 pt-6 hair text-[12px] leading-relaxed text-white/30">
+        ¿No tenés la clave? Escribinos a
+        <a href="mailto:info@digitalbuilders.net" class="text-white/55 hover:text-db transition">info@digitalbuilders.net</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ SITIO ══════════════════════════ -->
+<div id="app" class="hidden">
+
+  <div class="bg-aura" aria-hidden="true">
+    <span style="width:640px;height:640px;top:-220px;left:-180px;background:#3B82F6"></span>
+    <span style="width:520px;height:520px;top:8%;right:-200px;background:#8B5CF6;opacity:.22"></span>
+    <span style="width:560px;height:560px;top:52%;left:-220px;background:#10B981;opacity:.16"></span>
+    <span style="width:520px;height:520px;bottom:-200px;right:-140px;background:#F97316;opacity:.16"></span>
+  </div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- progreso -->
+  <div class="fixed top-0 left-0 right-0 z-[70] h-[2px] bg-transparent">
+    <div id="progress" class="h-full w-0 bg-gradient-to-r from-dac via-db to-intra transition-[width] duration-150 ease-out"></div>
+  </div>
+
+  <!-- ─────────── NAV ─────────── -->
+  <header id="nav" class="fixed top-0 inset-x-0 z-[60] transition-all duration-500">
+    <div class="mx-auto max-w-[1240px] px-5 sm:px-8">
+      <div id="nav-inner" class="mt-3 sm:mt-4 rounded-2xl px-4 sm:px-5 py-3 flex items-center justify-between transition-all duration-500">
+        <a href="#inicio" class="flex items-center gap-2.5 shrink-0 group">
+          <span class="w-2 h-2 rounded-full bg-db pulse-dot"></span>
+          <span class="font-semibold tracking-tight text-[15px] text-white">Digital Builders</span>
+        </a>
+
+        <nav class="hidden lg:flex items-center gap-7 text-[13px] text-white/50">
+          <a href="#resumen"       class="navlink">Resumen</a>
+          <a href="#proyectos"     class="navlink">Proyectos</a>
+          <a href="#metodologia"   class="navlink">Cómo trabajamos</a>
+          <a href="#roadmap"       class="navlink">Roadmap</a>
+          <a href="#mantenimiento" class="navlink">Mantenimiento</a>
+          <a href="#inversion"     class="navlink">Inversión</a>
+        </nav>
+
+        <a href="#cierre" class="hidden lg:inline-flex items-center gap-2 rounded-xl bg-white/[0.06] border border-white/10 px-4 py-2 text-[13px] text-white/85 hover:bg-white/[0.11] hover:border-white/20 transition">
+          Contacto
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+
+        <button id="burger" class="lg:hidden -mr-1 p-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/[0.06] transition" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+          <svg id="burger-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+
+      <div id="mobile-menu" class="lg:hidden overflow-hidden max-h-0 transition-[max-height] duration-500 ease-[cubic-bezier(.16,1,.3,1)]">
+        <nav class="glass rounded-2xl mt-2 p-2 flex flex-col text-[15px]">
+          <a href="#resumen"       class="m-link px-4 py-3.5 rounded-xl text-white/70 hover:text-white hover:bg-white/[0.05] transition">Resumen ejecutivo</a>
+          <a href="#proyectos"     class="m-link px-4 py-3.5 rounded-xl text-white/70 hover:text-white hover:bg-white/[0.05] transition">Los 4 proyectos</a>
+          <a href="#metodologia"   class="m-link px-4 py-3.5 rounded-xl text-white/70 hover:text-white hover:bg-white/[0.05] transition">Cómo trabajamos</a>
+          <a href="#roadmap"       class="m-link px-4 py-3.5 rounded-xl text-white/70 hover:text-white hover:bg-white/[0.05] transition">Roadmap</a>
+          <a href="#mantenimiento" class="m-link px-4 py-3.5 rounded-xl text-white/70 hover:text-white hover:bg-white/[0.05] transition">Mantenimiento</a>
+          <a href="#inversion"     class="m-link px-4 py-3.5 rounded-xl text-white/70 hover:text-white hover:bg-white/[0.05] transition">Inversión</a>
+          <a href="#cierre"        class="m-link px-4 py-3.5 rounded-xl text-white/70 hover:text-white hover:bg-white/[0.05] transition">Contacto</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+
+  <!-- ═══════════ 1 · HERO ═══════════ -->
+  <section id="inicio" class="relative min-h-[100svh] flex flex-col justify-center pt-28 pb-16 sm:pt-32">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+
+      <div class="reveal inline-flex items-center gap-2.5 rounded-full glass-soft px-3.5 py-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-db"></span>
+        <span class="font-mono text-[10px] sm:text-[11px] eyebrow text-white/55">Documento confidencial · 2026</span>
+      </div>
+
+      <h1 class="reveal mt-8 sm:mt-10 display grad-text text-[clamp(2.6rem,11.5vw,7.5rem)] max-w-[16ch]" style="--d:80ms">
+        Propuesta<br class="hidden sm:block" /> Técnica y<br /> Comercial
+      </h1>
+
+      <div class="reveal mt-8 sm:mt-10 flex flex-wrap items-center gap-2 sm:gap-2.5" style="--d:180ms">
+        <span class="inline-flex items-center gap-2 rounded-full border border-dac/25 bg-dac/[0.09] px-3.5 py-2 text-[13px] sm:text-sm text-white/85"><span class="w-1.5 h-1.5 rounded-full bg-dac"></span>DAC</span>
+        <span class="inline-flex items-center gap-2 rounded-full border border-ga/25 bg-ga/[0.09] px-3.5 py-2 text-[13px] sm:text-sm text-white/85"><span class="w-1.5 h-1.5 rounded-full bg-ga"></span>Grupo Agencia</span>
+        <span class="inline-flex items-center gap-2 rounded-full border border-sumate/25 bg-sumate/[0.09] px-3.5 py-2 text-[13px] sm:text-sm text-white/85"><span class="w-1.5 h-1.5 rounded-full bg-sumate"></span>Sumate</span>
+        <span class="inline-flex items-center gap-2 rounded-full border border-intra/25 bg-intra/[0.09] px-3.5 py-2 text-[13px] sm:text-sm text-white/85"><span class="w-1.5 h-1.5 rounded-full bg-intra"></span>Intranet</span>
+      </div>
+
+      <div class="reveal mt-10 sm:mt-14 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8" style="--d:260ms">
+        <div>
+          <p class="font-mono text-[10px] eyebrow text-white/35">Preparada por</p>
+          <p class="mt-2.5 text-[26px] sm:text-3xl font-semibold tracking-tight text-white">Digital Builders</p>
+          <p class="mt-1.5 text-sm text-white/40">Desarrollo web &amp; plataformas digitales · Uruguay</p>
+        </div>
+
+        <a href="#resumen" data-scroll
+          class="group inline-flex items-center justify-center gap-3 rounded-2xl bg-white text-ink font-semibold text-[15px] px-7 py-4 transition hover:bg-white/90 active:scale-[.985] w-full sm:w-auto">
+          Ver la propuesta
+          <svg class="transition-transform duration-300 group-hover:translate-y-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="reveal absolute bottom-6 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-3" style="--d:420ms">
+      <span class="font-mono text-[10px] eyebrow text-white/25">Scroll</span>
+      <span class="w-px h-10 bg-gradient-to-b from-white/30 to-transparent floaty"></span>
+    </div>
+  </section>
+
+  <!-- ═══════════ 2 · RESUMEN EJECUTIVO ═══════════ -->
+  <section id="resumen" class="relative py-24 sm:py-32">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+
+      <div class="reveal flex items-center gap-3">
+        <span class="font-mono text-[10px] eyebrow text-db">01</span>
+        <span class="h-px w-8 bg-white/15"></span>
+        <span class="font-mono text-[10px] eyebrow text-white/40">Resumen ejecutivo</span>
+      </div>
+
+      <div class="mt-9 grid lg:grid-cols-12 gap-10 lg:gap-16">
+        <h2 class="reveal lg:col-span-5 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+          Cuatro plataformas,<br />un solo plan.
+        </h2>
+
+        <div class="lg:col-span-7 space-y-5 text-[15px] sm:text-[17px] leading-relaxed text-white/55">
+          <p class="reveal" style="--d:80ms"><span class="pending">[PENDIENTE: párrafo de apertura — contexto del cliente, situación actual y objetivo general del proyecto.]</span></p>
+          <p class="reveal" style="--d:140ms"><span class="pending">[PENDIENTE: párrafo de alcance — qué incluye la propuesta, cómo se articulan las cuatro plataformas y qué gana DAC con el enfoque integrado.]</span></p>
+          <p class="reveal" style="--d:200ms"><span class="pending">[PENDIENTE: párrafo de cierre — diferencial de Digital Builders y por qué este plan es ejecutable en el plazo propuesto.]</span></p>
+        </div>
+      </div>
+
+      <div class="mt-14 sm:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-6 sm:p-7" style="--d:0ms">
+          <div class="sheen"></div>
+          <div class="flex items-baseline gap-1">
+            <span class="display text-[clamp(2.6rem,9vw,3.6rem)] text-white" data-count="4">0</span>
+          </div>
+          <p class="mt-3 text-[15px] font-medium text-white/90">plataformas</p>
+          <p class="mt-1.5 text-[13px] leading-relaxed text-white/40">DAC, Grupo Agencia, Sumate e Intranet bajo una misma arquitectura.</p>
+          <span class="absolute top-6 right-6 w-2 h-2 rounded-full bg-dac"></span>
+        </article>
+
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-6 sm:p-7" style="--d:90ms">
+          <div class="sheen"></div>
+          <span class="display text-[clamp(2.6rem,9vw,3.6rem)] text-white" data-count="51">0</span>
+          <p class="mt-3 text-[15px] font-medium text-white/90">funcionalidades analizadas</p>
+          <p class="mt-1.5 text-[13px] leading-relaxed text-white/40">Relevadas, estimadas y priorizadas una por una.</p>
+          <span class="absolute top-6 right-6 w-2 h-2 rounded-full bg-ga"></span>
+        </article>
+
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-6 sm:p-7" style="--d:180ms">
+          <div class="sheen"></div>
+          <div class="flex items-baseline">
+            <span class="display text-[clamp(2.6rem,9vw,3.6rem)] text-white/45">~</span>
+            <span class="display text-[clamp(2.6rem,9vw,3.6rem)] text-white" data-count="1000" data-sep="true">0</span>
+          </div>
+          <p class="mt-3 text-[15px] font-medium text-white/90">horas estimadas</p>
+          <p class="mt-1.5 text-[13px] leading-relaxed text-white/40">Equipo dedicado durante todo el ciclo de trabajo.</p>
+          <span class="absolute top-6 right-6 w-2 h-2 rounded-full bg-sumate"></span>
+        </article>
+
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-6 sm:p-7" style="--d:270ms">
+          <div class="sheen"></div>
+          <svg class="mb-4 text-db" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          <p class="display text-[22px] sm:text-[24px] leading-tight text-white">Entregables demostrables</p>
+          <p class="mt-2 text-[15px] font-medium text-db">cada mes</p>
+          <p class="mt-2 text-[13px] leading-relaxed text-white/40">Nada de cajas negras: siempre hay algo funcionando para ver.</p>
+          <span class="absolute top-6 right-6 w-2 h-2 rounded-full bg-intra"></span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 3 · LOS 4 PROYECTOS ═══════════ -->
+  <section id="proyectos" class="relative py-24 sm:py-32">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+
+      <div class="reveal flex items-center gap-3">
+        <span class="font-mono text-[10px] eyebrow text-db">02</span>
+        <span class="h-px w-8 bg-white/15"></span>
+        <span class="font-mono text-[10px] eyebrow text-white/40">Los 4 proyectos</span>
+      </div>
+
+      <div class="mt-9 grid lg:grid-cols-12 gap-6 items-end">
+        <h2 class="reveal lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+          Cada plataforma,<br />con identidad propia.
+        </h2>
+        <p class="reveal lg:col-span-5 text-[15px] leading-relaxed text-white/45" style="--d:100ms">
+          Cuatro productos distintos que comparten base técnica, design system y equipo. Un solo estándar de calidad, cuatro experiencias diferenciadas.
+        </p>
+      </div>
+
+      <div class="mt-14 sm:mt-20 space-y-6 sm:space-y-8">
+
+        <!-- ····· DAC ····· -->
+        <article class="reveal card-hov relative overflow-hidden glass rounded-[26px] sm:rounded-[32px]" data-accent="dac">
+          <div class="sheen"></div>
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-dac/70 to-transparent"></div>
+          <div class="absolute -top-24 -left-16 w-72 h-72 rounded-full bg-dac/20 blur-[90px] pointer-events-none"></div>
+
+          <div class="relative p-6 sm:p-9 lg:p-12">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="font-mono text-[10px] eyebrow text-dac">Proyecto 01</span>
+              <span class="h-px w-6 bg-white/15"></span>
+              <span class="font-mono text-[10px] eyebrow text-white/35">Sitio institucional</span>
+            </div>
+
+            <div class="mt-5 grid lg:grid-cols-12 gap-6 lg:gap-12">
+              <div class="lg:col-span-5">
+                <h3 class="display text-[clamp(2rem,8vw,3.2rem)] text-white">DAC</h3>
+                <p class="mt-4 text-[15px] leading-relaxed text-white/50">
+                  <span class="pending">[PENDIENTE: descripción de DAC — qué es la plataforma, a qué público sirve y cuál es su rol dentro del ecosistema digital del grupo.]</span>
+                </p>
+              </div>
+
+              <div class="lg:col-span-7">
+                <figure class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
+                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio DAC (pendiente)" class="w-full h-auto block"
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A0C13'/%3E%3Cstop offset='1' stop-color='%233B82F6' stop-opacity='.22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3Cg fill='%23FFFFFF' fill-opacity='.055'%3E%3Crect x='80' y='80' width='300' height='28' rx='14'/%3E%3Crect x='80' y='150' width='820' height='64' rx='16'/%3E%3Crect x='80' y='240' width='640' height='22' rx='11'/%3E%3Crect x='80' y='284' width='520' height='22' rx='11'/%3E%3Crect x='80' y='380' width='420' height='190' rx='22'/%3E%3Crect x='540' y='380' width='420' height='190' rx='22'/%3E%3Crect x='1000' y='380' width='420' height='190' rx='22'/%3E%3C/g%3E%3Crect x='1000' y='80' width='420' height='230' rx='26' fill='%233B82F6' fill-opacity='.16'/%3E%3Ctext x='800' y='650' text-anchor='middle' font-family='monospace' font-size='27' fill='%236B7280'%3E[PENDIENTE: maqueta panoramica]%3C/text%3E%3C/svg%3E" />
+                </figure>
+              </div>
+            </div>
+
+            <div class="acc mt-7 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+              <button type="button" class="acc-btn w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 text-left" aria-expanded="false">
+                <span class="text-[14px] sm:text-[15px] font-medium text-white/85">Ver funcionalidades</span>
+                <span class="acc-ico shrink-0 grid place-items-center w-8 h-8 rounded-full border border-dac/30 bg-dac/10 text-dac">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="acc-panel">
+                <div>
+                  <ul class="px-5 sm:px-6 pb-6 space-y-2.5 text-[14px] leading-relaxed">
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 01 de DAC]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 02 de DAC]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 03 de DAC]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span><span class="pending">[PENDIENTE: listado completo de funcionalidades relevadas para DAC]</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ····· GRUPO AGENCIA ····· -->
+        <article class="reveal card-hov relative overflow-hidden glass rounded-[26px] sm:rounded-[32px]" data-accent="ga">
+          <div class="sheen"></div>
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ga/70 to-transparent"></div>
+          <div class="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-ga/20 blur-[90px] pointer-events-none"></div>
+
+          <div class="relative p-6 sm:p-9 lg:p-12">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="font-mono text-[10px] eyebrow text-ga">Proyecto 02</span>
+              <span class="h-px w-6 bg-white/15"></span>
+              <span class="font-mono text-[10px] eyebrow text-white/35">Plataforma transaccional</span>
+            </div>
+
+            <div class="mt-5 grid lg:grid-cols-12 gap-6 lg:gap-12">
+              <div class="lg:col-span-5">
+                <h3 class="display text-[clamp(2rem,8vw,3.2rem)] text-white">Grupo Agencia</h3>
+                <p class="mt-4 text-[15px] leading-relaxed text-white/50">
+                  <span class="pending">[PENDIENTE: descripción de Grupo Agencia — alcance del sitio, flujos transaccionales previstos y públicos objetivo.]</span>
+                </p>
+              </div>
+
+              <div class="lg:col-span-7">
+                <figure class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
+                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio Grupo Agencia (pendiente)" class="w-full h-auto block"
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A0C13'/%3E%3Cstop offset='1' stop-color='%23F97316' stop-opacity='.22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3Cg fill='%23FFFFFF' fill-opacity='.055'%3E%3Crect x='80' y='80' width='300' height='28' rx='14'/%3E%3Crect x='80' y='150' width='760' height='64' rx='16'/%3E%3Crect x='80' y='240' width='600' height='22' rx='11'/%3E%3Crect x='80' y='380' width='640' height='190' rx='22'/%3E%3Crect x='760' y='380' width='300' height='190' rx='22'/%3E%3Crect x='1100' y='380' width='320' height='190' rx='22'/%3E%3C/g%3E%3Crect x='920' y='80' width='500' height='240' rx='26' fill='%23F97316' fill-opacity='.16'/%3E%3Ctext x='800' y='650' text-anchor='middle' font-family='monospace' font-size='27' fill='%236B7280'%3E[PENDIENTE: maqueta panoramica]%3C/text%3E%3C/svg%3E" />
+                </figure>
+              </div>
+            </div>
+
+            <div class="acc mt-7 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+              <button type="button" class="acc-btn w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 text-left" aria-expanded="false">
+                <span class="text-[14px] sm:text-[15px] font-medium text-white/85">Ver funcionalidades</span>
+                <span class="acc-ico shrink-0 grid place-items-center w-8 h-8 rounded-full border border-ga/30 bg-ga/10 text-ga">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="acc-panel">
+                <div>
+                  <ul class="px-5 sm:px-6 pb-6 space-y-2.5 text-[14px] leading-relaxed">
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-ga shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 01 de Grupo Agencia]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-ga shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 02 de Grupo Agencia]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-ga shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 03 de Grupo Agencia]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-ga shrink-0"></span><span class="pending">[PENDIENTE: listado completo de funcionalidades relevadas para Grupo Agencia]</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ····· SUMATE ····· -->
+        <article class="reveal card-hov relative overflow-hidden glass rounded-[26px] sm:rounded-[32px]" data-accent="sumate">
+          <div class="sheen"></div>
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-sumate/70 to-transparent"></div>
+          <div class="absolute -top-24 -left-16 w-72 h-72 rounded-full bg-sumate/20 blur-[90px] pointer-events-none"></div>
+
+          <div class="relative p-6 sm:p-9 lg:p-12">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="font-mono text-[10px] eyebrow text-sumate">Proyecto 03</span>
+              <span class="h-px w-6 bg-white/15"></span>
+              <span class="font-mono text-[10px] eyebrow text-white/35">Sitio de campaña</span>
+            </div>
+
+            <div class="mt-5 grid lg:grid-cols-12 gap-6 lg:gap-12">
+              <div class="lg:col-span-5">
+                <h3 class="display text-[clamp(2rem,8vw,3.2rem)] text-white">Sumate</h3>
+                <p class="mt-4 text-[15px] leading-relaxed text-white/50">
+                  <span class="pending">[PENDIENTE: descripción de Sumate — objetivo del sitio, tipo de contenidos y conversión esperada.]</span>
+                </p>
+              </div>
+
+              <div class="lg:col-span-7">
+                <figure class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
+                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica del sitio Sumate (pendiente)" class="w-full h-auto block"
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A0C13'/%3E%3Cstop offset='1' stop-color='%23F5A524' stop-opacity='.22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3Cg fill='%23FFFFFF' fill-opacity='.055'%3E%3Crect x='80' y='80' width='260' height='28' rx='14'/%3E%3Crect x='80' y='150' width='700' height='64' rx='16'/%3E%3Crect x='80' y='240' width='560' height='22' rx='11'/%3E%3Crect x='80' y='300' width='260' height='52' rx='26'/%3E%3Crect x='80' y='410' width='1340' height='170' rx='24'/%3E%3C/g%3E%3Crect x='860' y='80' width='560' height='270' rx='26' fill='%23F5A524' fill-opacity='.16'/%3E%3Ctext x='800' y='655' text-anchor='middle' font-family='monospace' font-size='27' fill='%236B7280'%3E[PENDIENTE: maqueta panoramica]%3C/text%3E%3C/svg%3E" />
+                </figure>
+              </div>
+            </div>
+
+            <div class="acc mt-7 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+              <button type="button" class="acc-btn w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 text-left" aria-expanded="false">
+                <span class="text-[14px] sm:text-[15px] font-medium text-white/85">Ver funcionalidades</span>
+                <span class="acc-ico shrink-0 grid place-items-center w-8 h-8 rounded-full border border-sumate/30 bg-sumate/10 text-sumate">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="acc-panel">
+                <div>
+                  <ul class="px-5 sm:px-6 pb-6 space-y-2.5 text-[14px] leading-relaxed">
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-sumate shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 01 de Sumate]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-sumate shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 02 de Sumate]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-sumate shrink-0"></span><span class="pending">[PENDIENTE: listado completo de funcionalidades relevadas para Sumate]</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- ····· INTRANET ····· -->
+        <article class="reveal card-hov relative overflow-hidden glass rounded-[26px] sm:rounded-[32px]" data-accent="intra">
+          <div class="sheen"></div>
+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-intra/70 to-transparent"></div>
+          <div class="absolute -top-24 -right-16 w-72 h-72 rounded-full bg-intra/20 blur-[90px] pointer-events-none"></div>
+
+          <div class="relative p-6 sm:p-9 lg:p-12">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="font-mono text-[10px] eyebrow text-intra">Proyecto 04</span>
+              <span class="h-px w-6 bg-white/15"></span>
+              <span class="font-mono text-[10px] eyebrow text-white/35">Plataforma interna</span>
+            </div>
+
+            <div class="mt-5 grid lg:grid-cols-12 gap-6 lg:gap-12">
+              <div class="lg:col-span-5">
+                <h3 class="display text-[clamp(2rem,8vw,3.2rem)] text-white">Intranet</h3>
+                <p class="mt-4 text-[15px] leading-relaxed text-white/50">
+                  <span class="pending">[PENDIENTE: descripción de la Intranet — usuarios internos, módulos previstos y niveles de acceso por rol.]</span>
+                </p>
+              </div>
+
+              <div class="lg:col-span-7">
+                <figure class="relative rounded-2xl overflow-hidden border border-white/10 bg-white/[0.02]">
+                  <img loading="lazy" decoding="async" width="1600" height="700" alt="Maqueta panorámica de la Intranet (pendiente)" class="w-full h-auto block"
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A0C13'/%3E%3Cstop offset='1' stop-color='%238B5CF6' stop-opacity='.22'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1600' height='700' fill='url(%23g)'/%3E%3Cg fill='%23FFFFFF' fill-opacity='.055'%3E%3Crect x='80' y='80' width='260' height='540' rx='24'/%3E%3Crect x='390' y='80' width='1030' height='70' rx='18'/%3E%3Crect x='390' y='185' width='500' height='200' rx='22'/%3E%3Crect x='920' y='185' width='500' height='200' rx='22'/%3E%3Crect x='390' y='420' width='1030' height='200' rx='22'/%3E%3C/g%3E%3Crect x='390' y='185' width='500' height='200' rx='22' fill='%238B5CF6' fill-opacity='.14'/%3E%3Ctext x='905' y='665' text-anchor='middle' font-family='monospace' font-size='26' fill='%236B7280'%3E[PENDIENTE: maqueta panoramica]%3C/text%3E%3C/svg%3E" />
+                </figure>
+              </div>
+            </div>
+
+            <div class="acc mt-7 rounded-2xl border border-white/[0.08] bg-white/[0.02]">
+              <button type="button" class="acc-btn w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 text-left" aria-expanded="false">
+                <span class="text-[14px] sm:text-[15px] font-medium text-white/85">Ver funcionalidades</span>
+                <span class="acc-ico shrink-0 grid place-items-center w-8 h-8 rounded-full border border-intra/30 bg-intra/10 text-intra">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </span>
+              </button>
+              <div class="acc-panel">
+                <div>
+                  <ul class="px-5 sm:px-6 pb-6 space-y-2.5 text-[14px] leading-relaxed">
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-intra shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 01 de la Intranet]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-intra shrink-0"></span><span class="pending">[PENDIENTE: funcionalidad 02 de la Intranet]</span></li>
+                    <li class="flex gap-3"><span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-intra shrink-0"></span><span class="pending">[PENDIENTE: listado completo de funcionalidades relevadas para la Intranet]</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 4 · CÓMO TRABAJAMOS ═══════════ -->
+  <section id="metodologia" class="relative py-24 sm:py-32">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+
+      <div class="reveal flex items-center gap-3">
+        <span class="font-mono text-[10px] eyebrow text-db">03</span>
+        <span class="h-px w-8 bg-white/15"></span>
+        <span class="font-mono text-[10px] eyebrow text-white/40">Cómo trabajamos</span>
+      </div>
+
+      <div class="mt-9 grid lg:grid-cols-12 gap-6 items-end">
+        <h2 class="reveal lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+          Método simple,<br />control total.
+        </h2>
+        <p class="reveal lg:col-span-5 text-[15px] leading-relaxed text-white/45" style="--d:100ms">
+          El proceso está diseñado para que DAC vea avance real todos los meses y valide cada módulo antes de que se dé por cerrado.
+        </p>
+      </div>
+
+      <div class="mt-14 sm:mt-20 grid md:grid-cols-3 gap-4 sm:gap-5">
+
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-7 sm:p-8" style="--d:0ms">
+          <div class="sheen"></div>
+          <div class="grid place-items-center w-12 h-12 rounded-2xl bg-db/12 border border-db/25 text-db">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </div>
+          <h3 class="mt-6 text-[21px] font-semibold tracking-tight text-white">Un entregable cada 30 días</h3>
+          <p class="mt-3 text-[14px] leading-relaxed text-white/45">
+            Cada mes cierra con algo concreto y navegable: no informes de avance, sino producto funcionando en el entorno de staging.
+          </p>
+          <ul class="mt-6 space-y-2.5 text-[13.5px] text-white/55">
+            <li class="flex gap-2.5"><span class="mt-[7px] w-1 h-1 rounded-full bg-db shrink-0"></span>Demo en vivo al cierre de cada mes</li>
+            <li class="flex gap-2.5"><span class="mt-[7px] w-1 h-1 rounded-full bg-db shrink-0"></span>Acceso permanente al entorno de pruebas</li>
+            <li class="flex gap-2.5"><span class="mt-[7px] w-1 h-1 rounded-full bg-db shrink-0"></span>Alcance del mes acordado por adelantado</li>
+          </ul>
+        </article>
+
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-7 sm:p-8" style="--d:100ms">
+          <div class="sheen"></div>
+          <div class="grid place-items-center w-12 h-12 rounded-2xl bg-dac/12 border border-dac/25 text-dac">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="m9 15 2 2 4-4"/></svg>
+          </div>
+          <h3 class="mt-6 text-[21px] font-semibold tracking-tight text-white">UAT con checklist firmado</h3>
+          <p class="mt-3 text-[14px] leading-relaxed text-white/45">
+            Cada módulo se somete a pruebas de aceptación del lado de DAC, con una lista de verificación que se firma antes de avanzar.
+          </p>
+          <ul class="mt-6 space-y-2.5 text-[13.5px] text-white/55">
+            <li class="flex gap-2.5"><span class="mt-[7px] w-1 h-1 rounded-full bg-dac shrink-0"></span>Checklist por módulo, criterio por criterio</li>
+            <li class="flex gap-2.5"><span class="mt-[7px] w-1 h-1 rounded-full bg-dac shrink-0"></span>Ventana de observaciones y corrección</li>
+            <li class="flex gap-2.5"><span class="mt-[7px] w-1 h-1 rounded-full bg-dac shrink-0"></span>Firma de conformidad como cierre formal</li>
+          </ul>
+        </article>
+
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-7 sm:p-8" style="--d:200ms">
+          <div class="sheen"></div>
+          <div class="grid place-items-center w-12 h-12 rounded-2xl bg-intra/12 border border-intra/25 text-intra">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 3.8 9.3 9 10 5.2-.7 9-5 9-10V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <h3 class="mt-6 text-[21px] font-semibold tracking-tight text-white">Testing en 3 capas</h3>
+          <p class="mt-3 text-[14px] leading-relaxed text-white/45">
+            Nada llega a producción sin pasar por las tres capas de control. La calidad no se revisa al final: se construye durante todo el camino.
+          </p>
+          <ul class="mt-6 space-y-3 text-[13.5px]">
+            <li class="flex items-start gap-3">
+              <span class="font-mono text-[10px] text-intra/80 mt-0.5">01</span>
+              <span class="text-white/55"><span class="text-white/85">Automatizado</span> — pruebas técnicas en cada cambio de código.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="font-mono text-[10px] text-intra/80 mt-0.5">02</span>
+              <span class="text-white/55"><span class="text-white/85">Funcional interno</span> — QA de Digital Builders sobre cada flujo.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="font-mono text-[10px] text-intra/80 mt-0.5">03</span>
+              <span class="text-white/55"><span class="text-white/85">Aceptación del cliente</span> — validación final de DAC.</span>
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <!-- Seguridad -->
+      <div class="reveal mt-6 sm:mt-8 relative overflow-hidden glass rounded-3xl p-7 sm:p-9">
+        <div class="absolute -bottom-24 left-1/3 w-80 h-80 rounded-full bg-db/12 blur-[100px] pointer-events-none"></div>
+        <div class="relative grid lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-4">
+            <p class="font-mono text-[10px] eyebrow text-db">Seguridad &amp; cumplimiento</p>
+            <h3 class="mt-3 text-[22px] sm:text-[26px] font-semibold tracking-tight text-white text-balance">Estándares que no se negocian</h3>
+          </div>
+          <div class="lg:col-span-8 flex flex-wrap gap-2.5">
+            <span class="inline-flex items-center gap-2.5 rounded-2xl glass-soft px-4 py-3 text-[13.5px] text-white/75">
+              <svg class="text-db shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Gestión segura de sesiones
+            </span>
+            <span class="inline-flex items-center gap-2.5 rounded-2xl glass-soft px-4 py-3 text-[13.5px] text-white/75">
+              <svg class="text-db shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+              Alertas de acceso
+            </span>
+            <span class="inline-flex items-center gap-2.5 rounded-2xl glass-soft px-4 py-3 text-[13.5px] text-white/75">
+              <svg class="text-db shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+              Auditoría de cambios
+            </span>
+            <span class="inline-flex items-center gap-2.5 rounded-2xl border border-db/30 bg-db/[0.08] px-4 py-3 text-[13.5px] text-white/85">
+              <svg class="text-db shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 6v6c0 5 3.8 9.3 9 10 5.2-.7 9-5 9-10V6Z"/></svg>
+              Ley 18.331 · Protección de Datos Personales
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 5 · ROADMAP ═══════════ -->
+  <section id="roadmap" class="relative py-24 sm:py-32">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+
+      <div class="reveal flex items-center gap-3">
+        <span class="font-mono text-[10px] eyebrow text-db">04</span>
+        <span class="h-px w-8 bg-white/15"></span>
+        <span class="font-mono text-[10px] eyebrow text-white/40">Roadmap</span>
+      </div>
+
+      <div class="mt-9 grid lg:grid-cols-12 gap-6 items-end">
+        <h2 class="reveal lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+          Cinco meses.<br />Cinco entregas.
+        </h2>
+        <p class="reveal lg:col-span-5 text-[15px] leading-relaxed text-white/45" style="--d:100ms">
+          El plan se ejecuta en cinco meses de trabajo, con un sexto mes de colchón para estabilización. Cada mes cierra con un entregable validado.
+        </p>
+      </div>
+
+      <!-- Leyenda -->
+      <div class="reveal mt-10 flex flex-wrap items-center gap-x-5 gap-y-2.5 text-[12px] text-white/45">
+        <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-dac"></span>DAC</span>
+        <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-ga"></span>Grupo Agencia</span>
+        <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sumate"></span>Sumate</span>
+        <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-intra"></span>Intranet</span>
+        <span class="inline-flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-db"></span>Transversal</span>
+      </div>
+
+      <!-- Timeline -->
+      <div class="mt-10 sm:mt-14 relative">
+        <!-- riel horizontal (desktop) -->
+        <div class="hidden lg:block absolute left-0 right-0 top-[15px] h-px bg-gradient-to-r from-dac/50 via-db/40 to-white/5"></div>
+        <!-- riel vertical (mobile) -->
+        <div class="lg:hidden absolute left-[15px] top-3 bottom-3 w-px bg-gradient-to-b from-dac/50 via-db/40 to-white/5"></div>
+
+        <ol class="relative grid grid-cols-1 lg:grid-cols-6 gap-5 lg:gap-4">
+
+          <!-- MES 1 -->
+          <li class="reveal relative pl-11 lg:pl-0" style="--d:0ms">
+            <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
+              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dac/40 ring-4 ring-ink">
+                <span class="w-2 h-2 rounded-full bg-dac"></span>
+              </span>
+            </div>
+            <div class="glass rounded-3xl p-5 sm:p-6 h-full flex flex-col">
+              <p class="font-mono text-[10px] eyebrow text-white/35">Mes 01</p>
+              <h3 class="mt-2 text-[19px] font-semibold tracking-tight text-white leading-tight">Cimientos</h3>
+              <ul class="mt-5 space-y-3 text-[13px] leading-relaxed text-white/55 flex-1">
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-db shrink-0"></span>Arquitectura, entornos y repositorios</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-db shrink-0"></span>Design system y componentes base</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span>Wireframes de DAC aprobados</li>
+              </ul>
+              <div class="mt-6 pt-5 hair">
+                <p class="font-mono text-[9px] eyebrow text-white/30">Entregable</p>
+                <span class="mt-2.5 inline-flex rounded-full border border-db/30 bg-db/[0.09] px-3.5 py-2 text-[12.5px] leading-snug text-white/85">Entorno de staging + design system navegable</span>
+              </div>
+            </div>
+          </li>
+
+          <!-- MES 2 -->
+          <li class="reveal relative pl-11 lg:pl-0" style="--d:90ms">
+            <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
+              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dac/40 ring-4 ring-ink">
+                <span class="w-2 h-2 rounded-full bg-dac"></span>
+              </span>
+            </div>
+            <div class="glass rounded-3xl p-5 sm:p-6 h-full flex flex-col">
+              <p class="font-mono text-[10px] eyebrow text-white/35">Mes 02</p>
+              <h3 class="mt-2 text-[19px] font-semibold tracking-tight text-white leading-tight">DAC toma forma</h3>
+              <ul class="mt-5 space-y-3 text-[13px] leading-relaxed text-white/55 flex-1">
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span>Maquetación completa del sitio DAC</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span>Secciones institucionales cargadas</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-db shrink-0"></span>Gestor de contenidos operativo</li>
+              </ul>
+              <div class="mt-6 pt-5 hair">
+                <p class="font-mono text-[9px] eyebrow text-white/30">Entregable</p>
+                <span class="mt-2.5 inline-flex rounded-full border border-dac/30 bg-dac/[0.09] px-3.5 py-2 text-[12.5px] leading-snug text-white/85">DAC navegable en staging con contenido real</span>
+              </div>
+            </div>
+          </li>
+
+          <!-- MES 3 -->
+          <li class="reveal relative pl-11 lg:pl-0" style="--d:180ms">
+            <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
+              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-ga/40 ring-4 ring-ink">
+                <span class="w-2 h-2 rounded-full bg-ga"></span>
+              </span>
+            </div>
+            <div class="glass rounded-3xl p-5 sm:p-6 h-full flex flex-col">
+              <p class="font-mono text-[10px] eyebrow text-white/35">Mes 03</p>
+              <h3 class="mt-2 text-[19px] font-semibold tracking-tight text-white leading-tight">DAC opera · GA nace</h3>
+              <ul class="mt-5 space-y-3 text-[13px] leading-relaxed text-white/55 flex-1">
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span>Integraciones y ajustes finales de DAC</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-dac shrink-0"></span>UAT de DAC con checklist firmado</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-ga shrink-0"></span>Arranque de Grupo Agencia</li>
+              </ul>
+              <div class="mt-6 pt-5 hair">
+                <p class="font-mono text-[9px] eyebrow text-white/30">Entregable</p>
+                <span class="mt-2.5 inline-flex rounded-full border border-ga/30 bg-ga/[0.09] px-3.5 py-2 text-[12.5px] leading-snug text-white/85">DAC aprobado + primeras vistas de Grupo Agencia</span>
+              </div>
+            </div>
+          </li>
+
+          <!-- MES 4 -->
+          <li class="reveal relative pl-11 lg:pl-0" style="--d:270ms">
+            <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
+              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-sumate/40 ring-4 ring-ink">
+                <span class="w-2 h-2 rounded-full bg-sumate"></span>
+              </span>
+            </div>
+            <div class="glass rounded-3xl p-5 sm:p-6 h-full flex flex-col">
+              <p class="font-mono text-[10px] eyebrow text-white/35">Mes 04</p>
+              <h3 class="mt-2 text-[19px] font-semibold tracking-tight text-white leading-tight">Transaccional</h3>
+              <ul class="mt-5 space-y-3 text-[13px] leading-relaxed text-white/55 flex-1">
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-ga shrink-0"></span>Flujos transaccionales de Grupo Agencia</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-sumate shrink-0"></span>Desarrollo del sitio Sumate</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-intra shrink-0"></span>Inicio de la Intranet</li>
+              </ul>
+              <div class="mt-6 pt-5 hair">
+                <p class="font-mono text-[9px] eyebrow text-white/30">Entregable</p>
+                <span class="mt-2.5 inline-flex rounded-full border border-sumate/30 bg-sumate/[0.09] px-3.5 py-2 text-[12.5px] leading-snug text-white/85">Grupo Agencia en UAT + Sumate en staging</span>
+              </div>
+            </div>
+          </li>
+
+          <!-- MES 5 -->
+          <li class="reveal relative pl-11 lg:pl-0" style="--d:360ms">
+            <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
+              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-db/50 ring-4 ring-ink">
+                <span class="w-2 h-2 rounded-full bg-db pulse-dot"></span>
+              </span>
+            </div>
+            <div class="relative glass rounded-3xl p-5 sm:p-6 h-full flex flex-col overflow-hidden">
+              <div class="absolute -top-20 -right-16 w-56 h-56 rounded-full bg-db/18 blur-[80px] pointer-events-none"></div>
+              <p class="font-mono text-[10px] eyebrow text-db">Mes 05</p>
+              <h3 class="mt-2 text-[19px] font-semibold tracking-tight text-white leading-tight">Cierre total&nbsp;—<br class="hidden lg:block" /> producción</h3>
+              <ul class="mt-5 space-y-3 text-[13px] leading-relaxed text-white/55 flex-1">
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-intra shrink-0"></span>Intranet completa con accesos por rol</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-db shrink-0"></span>Performance, hardening y QA final</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-db shrink-0"></span>Pasaje a producción y capacitación</li>
+              </ul>
+              <div class="mt-6 pt-5 hair">
+                <p class="font-mono text-[9px] eyebrow text-white/30">Entregable</p>
+                <span class="mt-2.5 inline-flex rounded-full border border-db/40 bg-db/[0.12] px-3.5 py-2 text-[12.5px] leading-snug text-white">4 plataformas en producción + documentación</span>
+              </div>
+            </div>
+          </li>
+
+          <!-- MES 6 · colchón -->
+          <li class="reveal relative pl-11 lg:pl-0 opacity-45 hover:opacity-70 transition-opacity duration-500" style="--d:450ms">
+            <div class="absolute left-0 top-1.5 lg:relative lg:left-auto lg:top-auto lg:mb-6">
+              <span class="grid place-items-center w-[31px] h-[31px] rounded-full bg-ink border border-dashed border-white/25 ring-4 ring-ink">
+                <span class="w-2 h-2 rounded-full bg-white/30"></span>
+              </span>
+            </div>
+            <div class="rounded-3xl border border-dashed border-white/12 bg-white/[0.015] p-5 sm:p-6 h-full flex flex-col">
+              <p class="font-mono text-[10px] eyebrow text-white/30">Mes 06</p>
+              <h3 class="mt-2 text-[19px] font-semibold tracking-tight text-white/70 leading-tight">Colchón</h3>
+              <ul class="mt-5 space-y-3 text-[13px] leading-relaxed text-white/40 flex-1">
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-white/25 shrink-0"></span>Estabilización y ajustes finos</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-white/25 shrink-0"></span>Monitoreo post-lanzamiento</li>
+                <li class="flex gap-2.5"><span class="mt-[6px] w-1.5 h-1.5 rounded-full bg-white/25 shrink-0"></span>Acompañamiento del equipo de DAC</li>
+              </ul>
+              <div class="mt-6 pt-5 hair">
+                <p class="font-mono text-[9px] eyebrow text-white/25">Sin costo adicional</p>
+                <span class="mt-2.5 inline-flex rounded-full border border-white/12 px-3.5 py-2 text-[12.5px] leading-snug text-white/50">Margen de seguridad del cronograma</span>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 6 · MANTENIMIENTO ═══════════ -->
+  <section id="mantenimiento" class="relative py-24 sm:py-32">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+
+      <div class="reveal flex items-center gap-3">
+        <span class="font-mono text-[10px] eyebrow text-db">05</span>
+        <span class="h-px w-8 bg-white/15"></span>
+        <span class="font-mono text-[10px] eyebrow text-white/40">Mantenimiento</span>
+      </div>
+
+      <div class="mt-9 grid lg:grid-cols-12 gap-6 items-end">
+        <h2 class="reveal lg:col-span-7 display text-[clamp(2rem,6.4vw,3.6rem)] grad-text text-balance">
+          Después del lanzamiento,<br />seguimos acá.
+        </h2>
+        <p class="reveal lg:col-span-5 text-[15px] leading-relaxed text-white/45" style="--d:100ms">
+          Un servicio mensual con tiempos de respuesta comprometidos y trazabilidad completa de cada solicitud.
+        </p>
+      </div>
+
+      <div class="mt-14 sm:mt-20 grid lg:grid-cols-12 gap-4 sm:gap-5">
+
+        <!-- Precio -->
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-7 sm:p-8 lg:col-span-4 flex flex-col" style="--d:0ms">
+          <div class="sheen"></div>
+          <div class="absolute -top-24 -right-16 w-64 h-64 rounded-full bg-db/15 blur-[85px] pointer-events-none"></div>
+          <div class="relative flex-1">
+            <p class="font-mono text-[10px] eyebrow text-db">Plan mensual</p>
+            <div class="mt-6">
+              <p class="display text-[clamp(1.9rem,7vw,2.6rem)] pending leading-tight">[PENDIENTE: precio]</p>
+              <p class="mt-2 text-[15px] text-white/50">por mes · más impuestos</p>
+            </div>
+            <ul class="mt-8 space-y-3 text-[13.5px] text-white/55">
+              <li class="flex gap-3"><svg class="text-db shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Soporte correctivo de las 4 plataformas</li>
+              <li class="flex gap-3"><svg class="text-db shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Actualizaciones de seguridad y dependencias</li>
+              <li class="flex gap-3"><svg class="text-db shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Monitoreo, backups y reporte mensual</li>
+              <li class="flex gap-3"><svg class="text-db shrink-0 mt-0.5" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Bolsa de horas para mejoras evolutivas</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- SLA -->
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-7 sm:p-8 lg:col-span-8" style="--d:100ms">
+          <div class="sheen"></div>
+          <div class="flex flex-wrap items-baseline justify-between gap-3">
+            <div>
+              <p class="font-mono text-[10px] eyebrow text-white/35">Acuerdo de nivel de servicio</p>
+              <h3 class="mt-3 text-[22px] font-semibold tracking-tight text-white">Tiempos de respuesta</h3>
+            </div>
+            <span class="rounded-full glass-soft px-3.5 py-1.5 font-mono text-[10px] eyebrow text-white/50">Horario hábil</span>
+          </div>
+
+          <!-- mobile: tarjetas · sm+: tabla -->
+          <div class="mt-7 space-y-3 sm:hidden">
+            <div class="rounded-2xl glass-soft p-4">
+              <div class="flex items-center justify-between gap-3">
+                <span class="inline-flex items-center gap-2.5 text-[15px] font-medium text-white"><span class="w-2 h-2 rounded-full bg-red-500"></span>Crítica</span>
+                <span class="font-mono text-[15px] text-white">&lt; 2 hs</span>
+              </div>
+              <p class="mt-2.5 text-[13px] leading-relaxed text-white/45">Plataforma caída o función esencial bloqueada</p>
+            </div>
+            <div class="rounded-2xl glass-soft p-4">
+              <div class="flex items-center justify-between gap-3">
+                <span class="inline-flex items-center gap-2.5 text-[15px] font-medium text-white"><span class="w-2 h-2 rounded-full bg-ga"></span>Alta</span>
+                <span class="font-mono text-[15px] text-white">&lt; 8 hs</span>
+              </div>
+              <p class="mt-2.5 text-[13px] leading-relaxed text-white/45">Error que afecta a un módulo, con alternativa parcial</p>
+            </div>
+            <div class="rounded-2xl glass-soft p-4">
+              <div class="flex items-center justify-between gap-3">
+                <span class="inline-flex items-center gap-2.5 text-[15px] font-medium text-white"><span class="w-2 h-2 rounded-full bg-db"></span>Normal</span>
+                <span class="font-mono text-[15px] text-white">&lt; 24 hs</span>
+              </div>
+              <p class="mt-2.5 text-[13px] leading-relaxed text-white/45">Consultas, ajustes menores y mejoras planificadas</p>
+            </div>
+          </div>
+
+          <div class="mt-7 hidden sm:block">
+            <table class="w-full border-collapse text-left">
+              <thead>
+                <tr class="text-white/35 font-mono text-[10px] eyebrow">
+                  <th class="pb-3 pr-3 font-normal">Prioridad</th>
+                  <th class="pb-3 pr-3 font-normal">Respuesta</th>
+                  <th class="pb-3 font-normal">Situación</th>
+                </tr>
+              </thead>
+              <tbody class="text-[14px]">
+                <tr class="hair">
+                  <td class="py-4 pr-3">
+                    <span class="inline-flex items-center gap-2.5 font-medium text-white"><span class="w-2 h-2 rounded-full bg-red-500"></span>Crítica</span>
+                  </td>
+                  <td class="py-4 pr-3"><span class="font-mono text-[15px] text-white">&lt; 2 hs</span></td>
+                  <td class="py-4 text-white/45">Plataforma caída o función esencial bloqueada</td>
+                </tr>
+                <tr class="hair">
+                  <td class="py-4 pr-3">
+                    <span class="inline-flex items-center gap-2.5 font-medium text-white"><span class="w-2 h-2 rounded-full bg-ga"></span>Alta</span>
+                  </td>
+                  <td class="py-4 pr-3"><span class="font-mono text-[15px] text-white">&lt; 8 hs</span></td>
+                  <td class="py-4 text-white/45">Error que afecta a un módulo, con alternativa parcial</td>
+                </tr>
+                <tr class="hair">
+                  <td class="py-4 pr-3">
+                    <span class="inline-flex items-center gap-2.5 font-medium text-white"><span class="w-2 h-2 rounded-full bg-db"></span>Normal</span>
+                  </td>
+                  <td class="py-4 pr-3"><span class="font-mono text-[15px] text-white">&lt; 24 hs</span></td>
+                  <td class="py-4 text-white/45">Consultas, ajustes menores y mejoras planificadas</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </article>
+
+        <!-- Portal de soporte -->
+        <article class="reveal card-hov relative overflow-hidden glass rounded-3xl p-7 sm:p-9 lg:col-span-12" style="--d:200ms">
+          <div class="sheen"></div>
+          <div class="absolute -bottom-28 right-1/4 w-80 h-80 rounded-full bg-intra/15 blur-[100px] pointer-events-none"></div>
+          <div class="relative grid lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-5">
+              <div class="grid place-items-center w-12 h-12 rounded-2xl bg-intra/12 border border-intra/25 text-intra">
+                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3ZM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3Z"/></svg>
+              </div>
+              <h3 class="mt-6 text-[24px] sm:text-[28px] font-semibold tracking-tight text-white text-balance">Portal de soporte integrado con trazabilidad completa</h3>
+              <p class="mt-4 text-[14.5px] leading-relaxed text-white/45">
+                Cada solicitud queda registrada, priorizada y visible: DAC ve en todo momento en qué estado está su pedido y quién lo está resolviendo.
+              </p>
+            </div>
+            <div class="lg:col-span-7 grid sm:grid-cols-2 gap-3">
+              <div class="rounded-2xl glass-soft p-5">
+                <p class="font-mono text-[10px] eyebrow text-intra">01</p>
+                <p class="mt-3 text-[15px] font-medium text-white">Ticket con historial</p>
+                <p class="mt-1.5 text-[13px] leading-relaxed text-white/40">Toda la conversación y los archivos en un solo lugar.</p>
+              </div>
+              <div class="rounded-2xl glass-soft p-5">
+                <p class="font-mono text-[10px] eyebrow text-intra">02</p>
+                <p class="mt-3 text-[15px] font-medium text-white">Estado en tiempo real</p>
+                <p class="mt-1.5 text-[13px] leading-relaxed text-white/40">Recibido, en curso, en prueba, resuelto.</p>
+              </div>
+              <div class="rounded-2xl glass-soft p-5">
+                <p class="font-mono text-[10px] eyebrow text-intra">03</p>
+                <p class="mt-3 text-[15px] font-medium text-white">SLA medido, no prometido</p>
+                <p class="mt-1.5 text-[13px] leading-relaxed text-white/40">Los tiempos de respuesta quedan registrados por ticket.</p>
+              </div>
+              <div class="rounded-2xl glass-soft p-5">
+                <p class="font-mono text-[10px] eyebrow text-intra">04</p>
+                <p class="mt-3 text-[15px] font-medium text-white">Reporte mensual</p>
+                <p class="mt-1.5 text-[13px] leading-relaxed text-white/40">Volumen, tipos de incidencia y cumplimiento del SLA.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 7 · INVERSIÓN ═══════════ -->
+  <section id="inversion" class="relative py-24 sm:py-32">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+
+      <div class="reveal flex items-center gap-3">
+        <span class="font-mono text-[10px] eyebrow text-db">06</span>
+        <span class="h-px w-8 bg-white/15"></span>
+        <span class="font-mono text-[10px] eyebrow text-white/40">Inversión</span>
+      </div>
+
+      <div class="reveal mt-10 relative overflow-hidden glass rounded-[26px] sm:rounded-[36px] p-7 sm:p-12 lg:p-16">
+        <div class="absolute -top-32 -left-20 w-[420px] h-[420px] rounded-full bg-dac/16 blur-[120px] pointer-events-none"></div>
+        <div class="absolute -bottom-32 -right-20 w-[420px] h-[420px] rounded-full bg-db/14 blur-[120px] pointer-events-none"></div>
+
+        <div class="relative grid lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-7">
+            <p class="font-mono text-[10px] eyebrow text-white/35">Inversión total del proyecto</p>
+            <p class="mt-6 display text-[clamp(1.9rem,7vw,3.8rem)] pending leading-[1.08]">[PENDIENTE: USD XX.XXX + IVA]</p>
+            <p class="mt-6 text-[15px] leading-relaxed text-white/45 max-w-lg">
+              Incluye las cuatro plataformas, el design system compartido, las pruebas de aceptación, el pasaje a producción y la capacitación del equipo de DAC.
+            </p>
+          </div>
+          <div class="lg:col-span-5 grid grid-cols-2 gap-3">
+            <div class="rounded-2xl glass-soft p-5">
+              <p class="display text-[30px] text-white">4</p>
+              <p class="mt-1.5 text-[13px] text-white/45">plataformas</p>
+            </div>
+            <div class="rounded-2xl glass-soft p-5">
+              <p class="display text-[30px] text-white">5</p>
+              <p class="mt-1.5 text-[13px] text-white/45">meses de trabajo</p>
+            </div>
+            <div class="rounded-2xl glass-soft p-5">
+              <p class="display text-[30px] text-white">6</p>
+              <p class="mt-1.5 text-[13px] text-white/45">pagos</p>
+            </div>
+            <div class="rounded-2xl glass-soft p-5">
+              <p class="display text-[30px] text-white">0</p>
+              <p class="mt-1.5 text-[13px] text-white/45">costos ocultos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline de pagos -->
+      <h3 class="reveal mt-16 sm:mt-20 text-[22px] sm:text-[26px] font-semibold tracking-tight text-white">Cronograma de pagos</h3>
+
+      <ol class="mt-8 relative">
+        <div class="absolute left-[15px] sm:left-[19px] top-4 bottom-4 w-px bg-gradient-to-b from-db/50 via-white/12 to-transparent"></div>
+
+        <li class="reveal-x relative pl-12 sm:pl-16 pb-5" style="--d:0ms">
+          <span class="absolute left-0 top-4 grid place-items-center w-[31px] sm:w-[39px] h-[31px] sm:h-[39px] rounded-full bg-ink border border-db/45 ring-4 ring-ink">
+            <svg class="text-db" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          <div class="glass rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div class="sm:w-40 shrink-0">
+              <p class="font-mono text-[10px] eyebrow text-db">Firma</p>
+              <p class="mt-2 text-[16px] font-semibold text-white">Anticipo</p>
+            </div>
+            <p class="flex-1 text-[13.5px] leading-relaxed text-white/45">Habilita el inicio del proyecto: conformación del equipo, entornos y arranque del relevamiento técnico.</p>
+            <p class="sm:text-right shrink-0 text-[15px] pending">[PENDIENTE: USD]</p>
+          </div>
+        </li>
+
+        <li class="reveal-x relative pl-12 sm:pl-16 pb-5" style="--d:70ms">
+          <span class="absolute left-0 top-4 grid place-items-center w-[31px] sm:w-[39px] h-[31px] sm:h-[39px] rounded-full bg-ink border border-white/15 ring-4 ring-ink font-mono text-[11px] text-white/55">01</span>
+          <div class="glass rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div class="sm:w-40 shrink-0">
+              <p class="font-mono text-[10px] eyebrow text-white/35">Mes 01</p>
+              <p class="mt-2 text-[16px] font-semibold text-white">Cimientos</p>
+            </div>
+            <p class="flex-1 text-[13.5px] leading-relaxed text-white/45">Contra entrega del entorno de staging y el design system navegable.</p>
+            <p class="sm:text-right shrink-0 text-[15px] pending">[PENDIENTE: USD]</p>
+          </div>
+        </li>
+
+        <li class="reveal-x relative pl-12 sm:pl-16 pb-5" style="--d:140ms">
+          <span class="absolute left-0 top-4 grid place-items-center w-[31px] sm:w-[39px] h-[31px] sm:h-[39px] rounded-full bg-ink border border-white/15 ring-4 ring-ink font-mono text-[11px] text-white/55">02</span>
+          <div class="glass rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div class="sm:w-40 shrink-0">
+              <p class="font-mono text-[10px] eyebrow text-dac">Mes 02</p>
+              <p class="mt-2 text-[16px] font-semibold text-white">DAC toma forma</p>
+            </div>
+            <p class="flex-1 text-[13.5px] leading-relaxed text-white/45">Contra entrega de DAC navegable en staging con contenido real.</p>
+            <p class="sm:text-right shrink-0 text-[15px] pending">[PENDIENTE: USD]</p>
+          </div>
+        </li>
+
+        <li class="reveal-x relative pl-12 sm:pl-16 pb-5" style="--d:210ms">
+          <span class="absolute left-0 top-4 grid place-items-center w-[31px] sm:w-[39px] h-[31px] sm:h-[39px] rounded-full bg-ink border border-white/15 ring-4 ring-ink font-mono text-[11px] text-white/55">03</span>
+          <div class="glass rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div class="sm:w-40 shrink-0">
+              <p class="font-mono text-[10px] eyebrow text-ga">Mes 03</p>
+              <p class="mt-2 text-[16px] font-semibold text-white">DAC opera · GA nace</p>
+            </div>
+            <p class="flex-1 text-[13.5px] leading-relaxed text-white/45">Contra UAT de DAC firmado y primeras vistas de Grupo Agencia.</p>
+            <p class="sm:text-right shrink-0 text-[15px] pending">[PENDIENTE: USD]</p>
+          </div>
+        </li>
+
+        <li class="reveal-x relative pl-12 sm:pl-16 pb-5" style="--d:280ms">
+          <span class="absolute left-0 top-4 grid place-items-center w-[31px] sm:w-[39px] h-[31px] sm:h-[39px] rounded-full bg-ink border border-white/15 ring-4 ring-ink font-mono text-[11px] text-white/55">04</span>
+          <div class="glass rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div class="sm:w-40 shrink-0">
+              <p class="font-mono text-[10px] eyebrow text-sumate">Mes 04</p>
+              <p class="mt-2 text-[16px] font-semibold text-white">Transaccional</p>
+            </div>
+            <p class="flex-1 text-[13.5px] leading-relaxed text-white/45">Contra Grupo Agencia en UAT y Sumate disponible en staging.</p>
+            <p class="sm:text-right shrink-0 text-[15px] pending">[PENDIENTE: USD]</p>
+          </div>
+        </li>
+
+        <li class="reveal-x relative pl-12 sm:pl-16" style="--d:350ms">
+          <span class="absolute left-0 top-4 grid place-items-center w-[31px] sm:w-[39px] h-[31px] sm:h-[39px] rounded-full bg-ink border border-db/45 ring-4 ring-ink font-mono text-[11px] text-db">05</span>
+          <div class="relative overflow-hidden glass rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div class="absolute -top-20 -right-10 w-52 h-52 rounded-full bg-db/16 blur-[80px] pointer-events-none"></div>
+            <div class="relative sm:w-40 shrink-0">
+              <p class="font-mono text-[10px] eyebrow text-db">Mes 05</p>
+              <p class="mt-2 text-[16px] font-semibold text-white">Cierre total</p>
+            </div>
+            <p class="relative flex-1 text-[13.5px] leading-relaxed text-white/45">Contra las 4 plataformas en producción, documentación entregada y capacitación realizada.</p>
+            <p class="relative sm:text-right shrink-0 text-[15px] pending">[PENDIENTE: USD]</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="reveal mt-8 flex items-start gap-3.5 rounded-2xl border border-db/25 bg-db/[0.06] p-5 sm:p-6">
+        <svg class="text-db shrink-0 mt-0.5" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <p class="text-[14px] sm:text-[15px] leading-relaxed text-white/70">
+          Cada pago se libera contra entregable validado por el equipo de DAC.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 8 · CIERRE ═══════════ -->
+  <section id="cierre" class="relative py-24 sm:py-32">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+
+      <div class="reveal relative overflow-hidden glass rounded-[26px] sm:rounded-[36px] p-7 sm:p-12 lg:p-16">
+        <div class="absolute -top-40 left-1/3 w-[500px] h-[500px] rounded-full bg-intra/16 blur-[130px] pointer-events-none"></div>
+        <div class="absolute -bottom-40 -left-24 w-[440px] h-[440px] rounded-full bg-dac/14 blur-[130px] pointer-events-none"></div>
+
+        <div class="relative">
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-[10px] eyebrow text-db">07</span>
+            <span class="h-px w-8 bg-white/15"></span>
+            <span class="font-mono text-[10px] eyebrow text-white/40">Nuestro compromiso</span>
+          </div>
+
+          <h2 class="mt-8 display text-[clamp(2rem,7vw,4rem)] grad-text text-balance max-w-[18ch]">
+            Empecemos a construir.
+          </h2>
+
+          <p class="mt-7 text-[15px] sm:text-[17px] leading-relaxed text-white/55 max-w-2xl">
+            <span class="pending">[PENDIENTE: párrafo de compromiso — qué se compromete Digital Builders a garantizar durante todo el proyecto y después del lanzamiento.]</span>
+          </p>
+
+          <div class="mt-12 grid sm:grid-cols-2 gap-4">
+            <a href="mailto:info@digitalbuilders.net"
+               class="group card-hov relative overflow-hidden rounded-2xl glass-soft p-6 flex items-center justify-between gap-4 hover:border-db/35 transition">
+              <div>
+                <p class="font-mono text-[10px] eyebrow text-white/35">Escribinos</p>
+                <p class="mt-2.5 text-[16px] sm:text-[18px] font-medium text-white break-all">info@digitalbuilders.net</p>
+              </div>
+              <span class="grid place-items-center w-10 h-10 shrink-0 rounded-full border border-white/12 text-white/60 transition group-hover:border-db/45 group-hover:text-db">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </span>
+            </a>
+
+            <div class="rounded-2xl glass-soft p-6">
+              <p class="font-mono text-[10px] eyebrow text-white/35">Validez de la propuesta</p>
+              <p class="mt-2.5 text-[16px] sm:text-[18px] font-medium"><span class="pending">[PENDIENTE: fecha de validez]</span></p>
+            </div>
+          </div>
+
+          <p class="mt-12 pt-8 hair text-[15px] sm:text-[17px] leading-relaxed text-white/70 max-w-3xl text-balance">
+            Esta propuesta fue construida con las mismas tecnologías y estándares que proponemos para sus sitios.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ─────────── FOOTER ─────────── -->
+  <footer class="relative z-10 pb-12 pt-4">
+    <div class="mx-auto w-full max-w-[1240px] px-5 sm:px-8">
+      <div class="hair pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+        <div class="flex items-center gap-2.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-db"></span>
+          <span class="text-[14px] font-medium text-white/70">Digital Builders</span>
+        </div>
+        <p class="font-mono text-[10px] eyebrow text-white/25">Documento confidencial · DAC / Grupo Agencia · 2026</p>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var ACCESS_KEY = 'DAC2026';
+  var STORE_KEY  = 'db_prop_access';
+
+  var gate  = document.getElementById('gate');
+  var app   = document.getElementById('app');
+  var form  = document.getElementById('gate-form');
+  var input = document.getElementById('gate-input');
+  var err   = document.getElementById('gate-error');
+  var toggle= document.getElementById('gate-toggle');
+
+  function store(op) {
+    try { return op === 'get' ? sessionStorage.getItem(STORE_KEY) : sessionStorage.setItem(STORE_KEY, '1'); }
+    catch (e) { return null; }
+  }
+
+  /* ─── Reveal on scroll ─── */
+  function initReveal() {
+    var els = document.querySelectorAll('.reveal, .reveal-x');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ─── Contadores ─── */
+  function initCounters() {
+    var nums = document.querySelectorAll('[data-count]');
+    if (!nums.length) return;
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fmt = function (n, sep) {
+      return sep ? n.toLocaleString('es-UY') : String(n);
+    };
+
+    var run = function (el) {
+      var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+      var sep = el.getAttribute('data-sep') === 'true';
+      if (reduce) { el.textContent = fmt(target, sep); return; }
+      var dur = 1500, t0 = null;
+      var step = function (ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min((ts - t0) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 4);
+        el.textContent = fmt(Math.round(target * eased), sep);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    if (!('IntersectionObserver' in window)) { nums.forEach(run); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { run(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.5 });
+    nums.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ─── Acordeones ─── */
+  function initAccordions() {
+    document.querySelectorAll('.acc-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.closest('.acc');
+        var open = acc.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.querySelector('span').textContent = open ? 'Ocultar funcionalidades' : 'Ver funcionalidades';
+      });
+    });
+  }
+
+  /* ─── Nav: fondo, scroll-spy, progreso ─── */
+  function initNav() {
+    var navInner = document.getElementById('nav-inner');
+    var bar      = document.getElementById('progress');
+    var links    = Array.prototype.slice.call(document.querySelectorAll('.navlink'));
+    var sections = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+    var ticking  = false;
+
+    function update() {
+      var y = window.scrollY || window.pageYOffset;
+
+      if (y > 24) {
+        navInner.classList.add('glass', 'shadow-2xl');
+      } else {
+        navInner.classList.remove('glass', 'shadow-2xl');
+      }
+
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - window.innerHeight;
+      bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+
+      var current = -1;
+      sections.forEach(function (sec, i) {
+        if (sec && sec.getBoundingClientRect().top <= window.innerHeight * 0.35) current = i;
+      });
+      links.forEach(function (a, i) { a.classList.toggle('active', i === current); });
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+  }
+
+  /* ─── Menú mobile ─── */
+  function initMobileMenu() {
+    var burger = document.getElementById('burger');
+    var menu   = document.getElementById('mobile-menu');
+    var ico    = document.getElementById('burger-ico');
+    if (!burger || !menu) return;
+
+    var open = false;
+    var setOpen = function (v) {
+      open = v;
+      menu.style.maxHeight = v ? menu.scrollHeight + 16 + 'px' : '0px';
+      burger.setAttribute('aria-expanded', v ? 'true' : 'false');
+      burger.setAttribute('aria-label', v ? 'Cerrar menú' : 'Abrir menú');
+      ico.innerHTML = v
+        ? '<path d="M18 6 6 18M6 6l12 12"/>'
+        : '<path d="M3 6h18M3 12h18M3 18h18"/>';
+    };
+
+    burger.addEventListener('click', function () { setOpen(!open); });
+    document.querySelectorAll('.m-link').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 1024) setOpen(false); }, { passive: true });
+  }
+
+  /* ─── Sheen que sigue al cursor ─── */
+  function initSheen() {
+    if (!window.matchMedia('(hover:hover)').matches) return;
+    document.querySelectorAll('.card-hov').forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+  }
+
+  /* ─── Arranque del sitio ─── */
+  var booted = false;
+  function boot() {
+    if (booted) return;
+    booted = true;
+    initReveal();
+    initCounters();
+    initAccordions();
+    initNav();
+    initMobileMenu();
+    initSheen();
+  }
+
+  function unlock(instant) {
+    gate.style.transition = 'opacity .5s ease';
+    gate.style.opacity = instant ? '0' : '1';
+    app.classList.remove('hidden');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+
+    requestAnimationFrame(function () {
+      gate.style.opacity = '0';
+      boot();
+      window.setTimeout(function () { gate.remove(); }, instant ? 0 : 520);
+    });
+  }
+
+  /* ─── Gate ─── */
+  if (store('get') === '1') {
+    unlock(true);
+  } else {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var val = (input.value || '').trim();
+      if (val.toUpperCase() === ACCESS_KEY) {
+        store('set');
+        err.style.opacity = '0';
+        unlock(false);
+      } else {
+        err.style.opacity = '1';
+        input.value = '';
+        input.focus();
+        input.animate(
+          [{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' },
+           { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }],
+          { duration: 320, easing: 'ease-in-out' }
+        );
+      }
+    });
+
+    input.addEventListener('input', function () { err.style.opacity = '0'; });
+
+    toggle.addEventListener('click', function () {
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      toggle.setAttribute('aria-label', show ? 'Ocultar clave' : 'Mostrar clave');
+    });
+
+    window.setTimeout(function () { input.focus(); }, 350);
+  }
+
+  /* ─── Scroll suave del CTA (fallback) ─── */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href');
+      if (id === '#' || id.length < 2) return;
+      var t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', id);
+    });
+  });
+})();
+</script>
+</body>
+</html>

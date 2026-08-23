@@ -6,3 +6,6 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+
+# Propuesta estática (formato ajustado a mano)
+public/propuesta/index.html
