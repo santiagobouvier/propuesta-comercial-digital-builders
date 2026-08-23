@@ -131,6 +131,10 @@ Implementá la autenticación con Supabase Auth usando magic link (sin contrase�
 - Todas las rutas bajo /proyectos requieren sesión. Sin sesión, redirigí a /login.
 - En el encabezado, mostrá el nombre del usuario y un botón para cerrar sesión.
 - Deshabilitá el registro abierto en Supabase Auth: solo se entra por invitación.
+- Al completarse el login, llamá a la función asegurar_perfil(). Es la que crea
+  el perfil tomando el lado desde la tabla invitados, y falla con excepción si el
+  correo no está invitado. Sin esa llamada el usuario queda sin perfil y las
+  políticas RLS le niegan todo.
 - La ruta / sigue redirigiendo a /propuesta/index.html, sin login.
 
 Diseño: mismo dark del proyecto, tarjeta centrada, mobile-first.
@@ -141,37 +145,52 @@ Diseño: mismo dark del proyecto, tarjeta centrada, mobile-first.
 ## Prompt 3 · Página de detalle de proyecto
 
 ```
-Creá la ruta /proyectos/$slug que muestra un proyecto y todas sus funcionalidades
-para validar.
+Creá la ruta /proyectos/$slug que muestra un proyecto y sus funcionalidades para
+que el cliente valide el alcance.
+
+DATOS REALES YA CARGADOS
+Hay 5 proyectos, no 4: además de dac, grupo-agencia, sumate e intranet existe
+transversal ("Base transversal", color #10B981), que aplica a los cuatro sitios.
+En total 48 funcionalidades con 228 requisitos.
+
+Cada fila de funcionalidades tiene: codigo, titulo, detalle y mes_objetivo.
+El campo detalle es un texto con un requisito por línea: mostralo como lista,
+no como párrafo.
+
+NO EXISTE funcionalidades.horas. Las horas viven en la tabla estimaciones, que
+solo puede leer el lado digital_builders. No las muestres en ninguna pantalla
+del portal ni las incluyas en ningún export.
 
 ENCABEZADO
-- Nombre del proyecto en grande, con su color de acento y su bajada.
-- Barra de avance de validación: cuántas funcionalidades están validadas sobre el
-  total, y el desglose por estado con colores:
-  validado verde #10B981 · con cambios ámbar #F5A524 · no va rojo #EF4444 ·
-  pendiente gris.
+- Nombre del proyecto en grande con su color de acento y su bajada.
+- Avance de validación: validadas sobre el total, con desglose por estado:
+  validado #10B981 · con cambios #F5A524 · no va #EF4444 · pendiente gris.
 
-LISTADO DE FUNCIONALIDADES
-Una tarjeta por funcionalidad, mostrando código, título y detalle.
-Cada tarjeta tiene:
-- Un selector de estado con los 4 valores. Al cambiarlo, escribe en validaciones y
-  guarda actualizado_por y actualizado_en. Mostrá quién lo cambió y cuándo.
-- Un hilo de comentarios: los existentes con autor, fecha y una etiqueta visual
-  distinta según el lado (DAC o Digital Builders), más un campo para agregar uno
-  nuevo.
-- El contador de comentarios visible aunque el hilo esté plegado.
+LISTADO
+Una tarjeta por funcionalidad con codigo, titulo, el mes_objetivo como píldora
+discreta, y la lista de requisitos del campo detalle.
+
+Cada tarjeta lleva:
+- Selector de estado con los 4 valores. IMPORTANTE: solo el lado 'dac' puede
+  cambiarlo, así lo impone la política RLS validaciones_update_dac. Para un
+  usuario de digital_builders mostrá el estado en modo lectura, con una nota de
+  que la validación la hace el cliente. No intentes el update ni muestres el
+  control habilitado: la base lo va a rechazar.
+- Al guardar, actualizado_por debe ser el id del usuario actual, o la política
+  rechaza el cambio.
+- Hilo de comentarios con autor, fecha y una etiqueta visual distinta según el
+  lado. El contador visible aunque el hilo esté plegado.
+- La tabla comentarios tiene un campo interno (boolean). Los usuarios de
+  digital_builders pueden marcar un comentario como interno y esos los ve solo
+  su lado. A un usuario de dac ni le muestres la opción. Distinguí visualmente
+  los internos para que nadie se confunda al escribir.
 
 FILTROS
-Barra para filtrar por estado y un buscador por texto. En mobile que sea colapsable.
+Filtro por estado y buscador por texto, colapsables en mobile.
 
-IMPORTANTE
-- No muestres ni sumes las horas de las funcionalidades. Ese campo existe pero es
-  de uso interno y no va en pantalla.
-- Guardado optimista: el cambio se ve al instante y se revierte si falla, con aviso.
-- Mobile-first: a 320px no puede haber desborde horizontal.
+Guardado optimista, con reversión y aviso si falla.
+Mobile-first: a 320px no puede haber desborde horizontal.
 ```
-
----
 
 ## Prompt 4 · Tiempo real
 
@@ -192,7 +211,7 @@ Agregá Supabase Realtime a la página /proyectos/$slug.
 ## Prompt 5 · Índice del portal
 
 ```
-Creá la ruta /proyectos con las 4 tarjetas de proyecto: nombre, bajada, color de
+Creá la ruta /proyectos con las 5 tarjetas de proyecto (incluida Base transversal): nombre, bajada, color de
 acento y el avance de validación de cada uno (validadas sobre total, con una barra).
 Cada tarjeta lleva a /proyectos/$slug. Ordenadas por el campo orden.
 Arriba, el avance global de los 4 proyectos juntos.
@@ -220,8 +239,8 @@ Sin horas ni precios en ningún lado del documento.
 
 ## Lo que queda para después
 
-- **Cargar las 51 funcionalidades** en la tabla `funcionalidades`. Eso lo hago yo por
-  SQL cuando me pases el archivo, o lo pedís como prompt aparte.
+- ~~Cargar las funcionalidades~~ **HECHO**: 48 funcionalidades con 228 requisitos,
+  cargadas por migración desde el pliego.
 - **Cargar los invitados** (emails de DAC y de Digital Builders) en la tabla
   `invitados`, con su `lado`.
 - **Enlazar la propuesta con el portal**: los 4 bloques de proyecto de
