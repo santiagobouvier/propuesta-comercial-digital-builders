@@ -66,6 +66,7 @@ export type Database = {
           cuerpo: string
           funcionalidad_id: string
           id: string
+          interno: boolean
         }
         Insert: {
           autor_id: string
@@ -73,6 +74,7 @@ export type Database = {
           cuerpo: string
           funcionalidad_id: string
           id?: string
+          interno?: boolean
         }
         Update: {
           autor_id?: string
@@ -80,6 +82,7 @@ export type Database = {
           cuerpo?: string
           funcionalidad_id?: string
           id?: string
+          interno?: boolean
         }
         Relationships: [
           {
@@ -98,12 +101,38 @@ export type Database = {
           },
         ]
       }
+      estimaciones: {
+        Row: {
+          funcionalidad_id: string
+          horas: number | null
+          responsable: string | null
+        }
+        Insert: {
+          funcionalidad_id: string
+          horas?: number | null
+          responsable?: string | null
+        }
+        Update: {
+          funcionalidad_id?: string
+          horas?: number | null
+          responsable?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "estimaciones_funcionalidad_id_fkey"
+            columns: ["funcionalidad_id"]
+            isOneToOne: true
+            referencedRelation: "funcionalidades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       funcionalidades: {
         Row: {
           codigo: string
           detalle: string | null
-          horas: number | null
           id: string
+          mes_objetivo: string | null
           orden: number
           proyecto_id: string
           titulo: string
@@ -111,8 +140,8 @@ export type Database = {
         Insert: {
           codigo: string
           detalle?: string | null
-          horas?: number | null
           id?: string
+          mes_objetivo?: string | null
           orden?: number
           proyecto_id: string
           titulo: string
@@ -120,8 +149,8 @@ export type Database = {
         Update: {
           codigo?: string
           detalle?: string | null
-          horas?: number | null
           id?: string
+          mes_objetivo?: string | null
           orden?: number
           proyecto_id?: string
           titulo?: string
@@ -265,6 +294,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      mi_lado: { Args: never; Returns: Database["public"]["Enums"]["org_side"] }
       tiene_perfil: { Args: never; Returns: boolean }
     }
     Enums: {
