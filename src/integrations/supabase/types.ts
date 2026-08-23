@@ -265,6 +265,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      tiene_perfil: { Args: never; Returns: boolean }
     }
     Enums: {
       estado_funcionalidad: "pendiente" | "validado" | "con_cambios" | "no_va"
