@@ -30,3 +30,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Variables de entorno (hoy solo trae claves publicas, pero que no se suba nunca un secreto)
+.env
+.env.local
