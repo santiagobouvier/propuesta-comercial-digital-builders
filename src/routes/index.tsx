@@ -104,8 +104,8 @@ function Index() {
                 alt="Detalle arquitectónico moderno con hormigón y líneas limpias"
                 width={1440}
                 height={912}
+                loading="eager"
                 className="rounded-2xl object-cover shadow-xl"
-                priority="true"
               />
             </div>
           </div>
