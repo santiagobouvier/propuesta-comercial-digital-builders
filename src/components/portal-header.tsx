@@ -75,11 +75,7 @@ export function PortalHeader() {
               <SheetHeader className="space-y-6 text-left">
                 <div className="flex items-center gap-3">
                   <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-background ring-2 ring-primary/20 ring-offset-2 ring-offset-card">
-                    <img
-                      src={logoIcon.url}
-                      alt=""
-                      className="h-7 w-7 object-contain"
-                    />
+                    <img src={logoIcon.url} alt="" className="h-7 w-7 object-contain" />
                   </span>
                   <div className="flex flex-col">
                     <SheetTitle className="font-display text-lg tracking-tight">
@@ -99,9 +95,7 @@ export function PortalHeader() {
                     <p className="truncate text-sm font-medium text-foreground">
                       {nombreVisible(perfil)}
                     </p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {perfil?.email || ""}
-                    </p>
+                    <p className="truncate text-xs text-muted-foreground">{perfil?.email || ""}</p>
                   </div>
                 </div>
               </SheetHeader>
