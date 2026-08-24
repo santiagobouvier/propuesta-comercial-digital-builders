@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Cómo validar el alcance · Portal DAC</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2306070B'/%3E%3Crect x='10' y='10' width='44' height='44' fill='none' stroke='white' stroke-width='4'/%3E%3Crect x='34' y='16' width='14' height='14' fill='white'/%3E%3Crect x='16' y='33' width='15' height='15' fill='%238FCCF0'/%3E%3C/svg%3E" />
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box;margin:0}
+  body{background:#06070B;color:rgba(255,255,255,.88);
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(80% 40% at 15% 0%,rgba(59,130,246,.16),transparent 65%),
+      radial-gradient(70% 40% at 100% 25%,rgba(139,92,246,.10),transparent 70%),
+      radial-gradient(70% 45% at 0% 100%,rgba(16,185,129,.10),transparent 70%)}
+  .wrap{max-width:680px;margin:0 auto;padding:48px 22px 64px}
+  .logo-db{position:relative;display:inline-block;width:1em;height:1em;
+    border:.085em solid #fff;flex:none}
+  .logo-db::before{content:'';position:absolute;top:12%;right:10%;width:36%;height:36%;background:#fff}
+  .logo-db::after{content:'';position:absolute;bottom:10%;left:10%;width:40%;height:40%;background:#8FCCF0}
+  .marca{display:flex;align-items:center;gap:12px}
+  .marca b{font-size:15px;letter-spacing:-.01em}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;
+    letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+  h1{margin-top:26px;font-size:clamp(1.9rem,7vw,2.7rem);font-weight:800;
+    letter-spacing:-.035em;line-height:1.08;
+    background:linear-gradient(180deg,#fff 45%,rgba(255,255,255,.68));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{margin-top:12px;color:rgba(255,255,255,.5);font-size:15px}
+  .paso{margin-top:34px;display:flex;gap:16px}
+  .paso>i{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:11px;
+    color:#10B981;padding-top:5px;letter-spacing:.15em}
+  .paso h2{font-size:17px;font-weight:600;letter-spacing:-.01em}
+  .paso p{margin-top:6px;font-size:14px;color:rgba(255,255,255,.55)}
+  .paso strong{color:rgba(255,255,255,.85);font-weight:600}
+  .estados{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+  .chip{display:inline-flex;align-items:center;gap:7px;border-radius:9999px;
+    padding:6px 12px;font-size:12px;font-weight:500}
+  .chip i{width:7px;height:7px;border-radius:9999px;font-style:normal}
+  .nota{margin-top:38px;border:1px solid rgba(16,185,129,.25);
+    background:rgba(16,185,129,.06);border-radius:16px;padding:18px 20px;font-size:14px;
+    color:rgba(255,255,255,.65)}
+  .nota b{color:#fff}
+  .pie{margin-top:42px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08);
+    display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:baseline}
+  .pie a{color:rgba(255,255,255,.75);text-decoration:none}
+  .pie a:hover{color:#10B981}
+  ul{padding-left:18px;margin-top:8px}
+  li{font-size:14px;color:rgba(255,255,255,.55);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="marca">
+    <span class="logo-db" style="font-size:18px" aria-hidden="true"></span>
+    <b>Digital Builders</b>
+    <span class="mono" style="margin-left:auto">Guía · 5 min</span>
+  </div>
+
+  <h1>Cómo validar el alcance de sus proyectos</h1>
+  <p class="sub">
+    El portal reúne las <strong>48 funcionalidades y 228 requisitos</strong> relevados del pliego,
+    para que su equipo los revise y valide uno por uno. Todo queda registrado con autor y fecha.
+  </p>
+
+  <div class="paso">
+    <i>01</i>
+    <div>
+      <h2>Ingresen con su correo</h2>
+      <p>Abran el enlace que les compartimos y escriban su correo corporativo. Les llega un
+      <strong>enlace de acceso al mail</strong> — sin contraseñas que recordar. El acceso es
+      exclusivo para las personas invitadas de DAC y de Digital Builders.</p>
+    </div>
+  </div>
+
+  <div class="paso">
+    <i>02</i>
+    <div>
+      <h2>Elijan un proyecto</h2>
+      <p>Van a ver cinco bloques: <strong>DAC, Grupo Agencia, Sumate, Intranet</strong> y la
+      <strong>Base transversal</strong> (seguridad, accesos y cumplimiento que aplican a los
+      cuatro sitios). Cada uno muestra su barra de avance.</p>
+    </div>
+  </div>
+
+  <div class="paso">
+    <i>03</i>
+    <div>
+      <h2>Recorran el cronograma, mes a mes</h2>
+      <p>Cada proyecto muestra los mismos seis meses del plan general. Tocando un mes se
+      filtran solo las funcionalidades de ese mes — una forma cómoda de revisar por partes.</p>
+    </div>
+  </div>
+
+  <div class="paso">
+    <i>04</i>
+    <div>
+      <h2>Marquen el estado de cada funcionalidad</h2>
+      <p>Cada tarjeta lista todos los requisitos del pliego. Debajo, cuatro opciones:</p>
+      <div class="estados">
+        <span class="chip" style="color:#10B981;background:rgba(16,185,129,.13)"><i style="background:#10B981"></i>Validado — está bien así</span>
+        <span class="chip" style="color:#F5A524;background:rgba(245,165,36,.13)"><i style="background:#F5A524"></i>Con cambios — va, pero con ajustes</span>
+        <span class="chip" style="color:#EF4444;background:rgba(239,68,68,.13)"><i style="background:#EF4444"></i>No va — se quita del alcance</span>
+        <span class="chip" style="color:#9CA3AF;background:rgba(156,163,175,.13)"><i style="background:#9CA3AF"></i>Pendiente — aún sin revisar</span>
+      </div>
+      <p style="margin-top:10px">Si marcan <strong>Con cambios</strong> o <strong>No va</strong>,
+      dejen un comentario contando el porqué — así lo resolvemos rápido.</p>
+    </div>
+  </div>
+
+  <div class="paso">
+    <i>05</i>
+    <div>
+      <h2>Comenten lo que necesite aclaración</h2>
+      <p>Cada funcionalidad tiene su hilo de comentarios. Nosotros los vemos llegar
+      <strong>en tiempo real</strong> y respondemos ahí mismo, así toda la conversación queda
+      junto al requisito que la originó.</p>
+    </div>
+  </div>
+
+  <div class="nota">
+    <b>No hace falta hacerlo de una vez.</b> Pueden entrar las veces que quieran, desde
+    computadora o celular: todo queda guardado. Pueden participar varias personas del equipo,
+    y cada marca registra quién la hizo y cuándo. Cuando todo esté revisado, el alcance queda
+    cerrado por escrito — la base sobre la que arranca el desarrollo.
+  </div>
+
+  <div class="pie">
+    <span style="font-size:13px;color:rgba(255,255,255,.45)">¿Dudas? Escribinos:
+      <a href="mailto:info@digitalbuilders.net">info@digitalbuilders.net</a></span>
+    <span class="mono">Documento confidencial · 2026</span>
+  </div>
+</div>
+</body>
+</html>
