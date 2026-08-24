@@ -1,21 +1,32 @@
-import { Link, Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { useState } from "react";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 import { PortalHeader } from "@/components/portal-header";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
- * Cota superior para leer la sesión. Cubre el broker de sesión del preview de
- * Lovable, que resuelve por postMessage y puede no contestar; sin esta cota el
- * guard quedaba esperando para siempre y la ruta se veía en negro.
+ * Cota superior para leer la sesión: cubre el broker del preview de Lovable,
+ * que resuelve por postMessage y puede no contestar.
  */
 const ESPERA_MS = 6000;
 
+/** La misma clave y el mismo flag de sessionStorage que usa la propuesta. */
+const CLAVE = "DAC2026";
+const FLAG = "db_prop_access";
+
+function tienePase(): boolean {
+  try {
+    return sessionStorage.getItem(FLAG) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
+  // Ya no redirige al login: sin sesión el portal se ve en modo lectura y las
+  // políticas RLS solo permiten leer. Escribir sigue exigiendo cuenta invitada.
   beforeLoad: async () => {
-    // getSession lee del almacenamiento local: no hace un viaje a la red como
-    // getUser, así que no puede colgarse contra el backend. La validez real
-    // del token la siguen garantizando las políticas RLS en cada consulta.
     const espera = new Promise<null>((resolve) => {
       setTimeout(() => resolve(null), ESPERA_MS);
     });
@@ -23,8 +34,7 @@ export const Route = createFileRoute("/_authenticated")({
       supabase.auth.getSession().then(({ data }) => data.session),
       espera,
     ]);
-    if (!sesion) throw redirect({ to: "/login" });
-    return { user: sesion.user };
+    return { user: sesion?.user ?? null };
   },
   pendingMs: 0,
   pendingComponent: Verificando,
@@ -40,7 +50,7 @@ function Verificando() {
           className="mx-auto block h-8 w-8 animate-spin rounded-full border-2 border-border border-t-foreground"
           aria-hidden="true"
         />
-        <p className="mt-4 text-sm text-muted-foreground">Verificando acceso…</p>
+        <p className="mt-4 text-sm text-muted-foreground">Cargando…</p>
       </div>
     </div>
   );
@@ -50,28 +60,81 @@ function ErrorDeAcceso({ error }: { error: Error }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6">
       <div className="max-w-md rounded-2xl border border-border bg-card p-6 text-center">
-        <h1 className="text-lg font-semibold text-foreground">No pudimos verificar tu acceso</h1>
+        <h1 className="text-lg font-semibold text-foreground">Algo salió mal</h1>
         <p className="mt-2 break-words text-sm text-muted-foreground">
           {error?.message ?? "Error desconocido."}
         </p>
-        <div className="mt-5 flex flex-wrap justify-center gap-3 text-sm">
-          <button
-            type="button"
-            onClick={() => window.location.reload()}
-            className="rounded-xl bg-foreground px-4 py-2 font-medium text-background"
-          >
-            Reintentar
-          </button>
-          <Link to="/login" className="rounded-xl border border-border px-4 py-2 text-foreground">
-            Ir al login
-          </Link>
-        </div>
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="mt-5 rounded-xl bg-foreground px-4 py-2 text-sm font-medium text-background"
+        >
+          Reintentar
+        </button>
       </div>
     </div>
   );
 }
 
+function CompuertaClave({ onPase }: { onPase: () => void }) {
+  const [clave, setClave] = useState("");
+  const [error, setError] = useState(false);
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background px-6">
+      <form
+        onSubmit={(ev) => {
+          ev.preventDefault();
+          if (clave.trim().toUpperCase() === CLAVE) {
+            try {
+              sessionStorage.setItem(FLAG, "1");
+            } catch {
+              /* modo privado sin storage: dejamos pasar igual */
+            }
+            onPase();
+          } else {
+            setError(true);
+            setClave("");
+          }
+        }}
+        className="w-full max-w-sm rounded-2xl border border-border bg-card p-7"
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+          Digital Builders
+        </p>
+        <h1 className="mt-3 text-xl font-semibold text-foreground">Portal de validación</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Ingresá la clave de acceso de la propuesta para continuar.
+        </p>
+        <input
+          type="password"
+          value={clave}
+          onChange={(ev) => {
+            setClave(ev.target.value);
+            setError(false);
+          }}
+          placeholder="••••••••"
+          autoFocus
+          className="mt-5 w-full rounded-xl border border-border bg-background px-4 py-3 font-mono tracking-[0.2em] text-foreground placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none"
+        />
+        {error && <p className="mt-2 text-xs text-destructive">Clave incorrecta.</p>}
+        <button
+          type="submit"
+          className="mt-4 w-full rounded-xl bg-foreground py-3 text-sm font-semibold text-background"
+        >
+          Entrar
+        </button>
+      </form>
+    </div>
+  );
+}
+
 function PortalLayout() {
+  const { user } = Route.useRouteContext();
+  const [pase, setPase] = useState(() => Boolean(user) || tienePase());
+
+  if (!pase) return <CompuertaClave onPase={() => setPase(true)} />;
+
   return (
     <div className="min-h-screen bg-background">
       <PortalHeader />

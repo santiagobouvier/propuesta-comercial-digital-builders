@@ -3,9 +3,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { usePerfil } from "@/hooks/use-perfil";
-import { nombreVisible } from "@/lib/perfil";
 import {
   ESTADOS,
+  etiquetaAutor,
   MESES,
   ORDEN_ESTADOS,
   agregarComentario,
@@ -50,7 +50,7 @@ function HiloComentarios({
   esDB,
 }: {
   funcionalidad: FuncionalidadConEstado;
-  usuarioId: string;
+  usuarioId: string | null;
   esDB: boolean;
 }) {
   const queryClient = useQueryClient();
@@ -58,8 +58,15 @@ function HiloComentarios({
   const [interno, setInterno] = useState(false);
 
   const enviar = useMutation({
-    mutationFn: () =>
-      agregarComentario({ funcionalidadId: funcionalidad.id, autorId: usuarioId, cuerpo, interno }),
+    mutationFn: () => {
+      if (!usuarioId) return Promise.reject(new Error("Ingresá para comentar."));
+      return agregarComentario({
+        funcionalidadId: funcionalidad.id,
+        autorId: usuarioId,
+        cuerpo,
+        interno,
+      });
+    },
     onSuccess: () => {
       setCuerpo("");
       setInterno(false);
@@ -75,9 +82,7 @@ function HiloComentarios({
           className={`rounded-xl p-3 text-sm ${c.interno ? "border border-dashed border-amber-500/40 bg-amber-500/5" : "bg-muted/60"}`}
         >
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <span className="font-medium text-foreground">
-              {c.autor ? nombreVisible(c.autor as never) : "—"}
-            </span>
+            <span className="font-medium text-foreground">{etiquetaAutor(c.autor)}</span>
             <span
               className="rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
               style={
@@ -103,46 +108,55 @@ function HiloComentarios({
         </div>
       ))}
 
-      <form
-        onSubmit={(ev) => {
-          ev.preventDefault();
-          if (cuerpo.trim()) enviar.mutate();
-        }}
-        className="space-y-2"
-      >
-        <textarea
-          value={cuerpo}
-          onChange={(ev) => setCuerpo(ev.target.value)}
-          rows={2}
-          placeholder="Escribí un comentario…"
-          className="w-full resize-y rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none"
-        />
-        <div className="flex items-center justify-between gap-3">
-          {esDB ? (
-            <label className="flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
-              <input
-                type="checkbox"
-                checked={interno}
-                onChange={(ev) => setInterno(ev.target.checked)}
-                className="h-3.5 w-3.5 accent-amber-500"
-              />
-              Interno (DAC no lo ve)
-            </label>
-          ) : (
-            <span />
+      {!usuarioId ? (
+        <p className="text-sm text-muted-foreground">
+          <Link to="/login" className="font-medium text-foreground underline">
+            Ingresá con tu correo
+          </Link>{" "}
+          para comentar.
+        </p>
+      ) : (
+        <form
+          onSubmit={(ev) => {
+            ev.preventDefault();
+            if (cuerpo.trim()) enviar.mutate();
+          }}
+          className="space-y-2"
+        >
+          <textarea
+            value={cuerpo}
+            onChange={(ev) => setCuerpo(ev.target.value)}
+            rows={2}
+            placeholder="Escribí un comentario…"
+            className="w-full resize-y rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none"
+          />
+          <div className="flex items-center justify-between gap-3">
+            {esDB ? (
+              <label className="flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={interno}
+                  onChange={(ev) => setInterno(ev.target.checked)}
+                  className="h-3.5 w-3.5 accent-amber-500"
+                />
+                Interno (DAC no lo ve)
+              </label>
+            ) : (
+              <span />
+            )}
+            <button
+              type="submit"
+              disabled={!cuerpo.trim() || enviar.isPending}
+              className="rounded-xl bg-foreground px-4 py-1.5 text-sm font-medium text-background transition hover:opacity-90 disabled:opacity-40"
+            >
+              {enviar.isPending ? "Enviando…" : "Comentar"}
+            </button>
+          </div>
+          {enviar.isError && (
+            <p className="text-xs text-destructive">No se pudo enviar. Probá de nuevo.</p>
           )}
-          <button
-            type="submit"
-            disabled={!cuerpo.trim() || enviar.isPending}
-            className="rounded-xl bg-foreground px-4 py-1.5 text-sm font-medium text-background transition hover:opacity-90 disabled:opacity-40"
-          >
-            {enviar.isPending ? "Enviando…" : "Comentar"}
-          </button>
-        </div>
-        {enviar.isError && (
-          <p className="text-xs text-destructive">No se pudo enviar. Probá de nuevo.</p>
-        )}
-      </form>
+        </form>
+      )}
     </div>
   );
 }
@@ -156,7 +170,7 @@ function TarjetaFuncionalidad({
 }: {
   f: FuncionalidadConEstado;
   color: string;
-  usuarioId: string;
+  usuarioId: string | null;
   esDAC: boolean;
   esDB: boolean;
 }) {
@@ -166,7 +180,10 @@ function TarjetaFuncionalidad({
   const requisitos = (f.detalle ?? "").split("\n").filter(Boolean);
 
   const mutarEstado = useMutation({
-    mutationFn: (nuevo: Estado) => cambiarEstado(f.id, nuevo, usuarioId),
+    mutationFn: (nuevo: Estado) => {
+      if (!usuarioId) return Promise.reject(new Error("Ingresá para validar."));
+      return cambiarEstado(f.id, nuevo, usuarioId);
+    },
     onMutate: async (nuevo) => {
       await queryClient.cancelQueries({ queryKey: ["funcionalidades"] });
       const previo = queryClient.getQueriesData({ queryKey: ["funcionalidades"] });
@@ -255,7 +272,19 @@ function TarjetaFuncionalidad({
             ))}
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">La validación la hace el equipo de DAC.</p>
+          <p className="text-xs text-muted-foreground">
+            {esDB ? (
+              "La validación la hace el equipo de DAC."
+            ) : (
+              <>
+                Para validar,{" "}
+                <Link to="/login" className="font-medium text-foreground underline">
+                  ingresá con tu correo
+                </Link>
+                .
+              </>
+            )}
+          </p>
         )}
 
         <button
@@ -288,7 +317,7 @@ function TarjetaFuncionalidad({
 function DetalleProyecto() {
   const { slug } = Route.useParams();
   const queryClient = useQueryClient();
-  const { data: perfil } = usePerfil();
+  const { data: perfil, isPending: cargandoPerfil } = usePerfil();
 
   const proyecto = useQuery({ queryKey: ["proyecto", slug], queryFn: () => fetchProyecto(slug) });
   const funcionalidades = useQuery({
@@ -327,7 +356,7 @@ function DetalleProyecto() {
     return lista;
   }, [funcionalidades.data, filtro, mesFiltro, busqueda]);
 
-  if (proyecto.isPending || !perfil) {
+  if (proyecto.isPending || cargandoPerfil) {
     return (
       <main className="mx-auto max-w-4xl px-4 py-16 text-sm text-muted-foreground">Cargando…</main>
     );
@@ -347,8 +376,8 @@ function DetalleProyecto() {
   const todas = funcionalidades.data ?? [];
   const conteo = { pendiente: 0, validado: 0, con_cambios: 0, no_va: 0 } as Record<Estado, number>;
   for (const f of todas) conteo[f.validaciones?.estado ?? "pendiente"] += 1;
-  const esDAC = perfil.lado === "dac";
-  const esDB = perfil.lado === "digital_builders";
+  const esDAC = perfil?.lado === "dac";
+  const esDB = perfil?.lado === "digital_builders";
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
@@ -509,7 +538,7 @@ function DetalleProyecto() {
             key={f.id}
             f={f}
             color={p.color}
-            usuarioId={perfil.id}
+            usuarioId={perfil?.id ?? null}
             esDAC={esDAC}
             esDB={esDB}
           />

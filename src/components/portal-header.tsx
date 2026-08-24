@@ -93,9 +93,11 @@ export function PortalHeader() {
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-foreground">
-                      {nombreVisible(perfil)}
+                      {perfil ? nombreVisible(perfil) : "Modo lectura"}
                     </p>
-                    <p className="truncate text-xs text-muted-foreground">{perfil?.email || ""}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {perfil?.email || "Ingresá para validar"}
+                    </p>
                   </div>
                 </div>
               </SheetHeader>
@@ -114,21 +116,29 @@ export function PortalHeader() {
               </nav>
 
               <div className="mt-auto flex flex-col gap-3 pt-6">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-3 rounded-xl border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                  onClick={cerrarSesion}
-                >
-                  <LogOut className="h-4 w-4" />
-                  Cerrar sesión
-                </Button>
+                {perfil ? (
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-3 rounded-xl border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                    onClick={cerrarSesion}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Cerrar sesión
+                  </Button>
+                ) : (
+                  <Button asChild variant="outline" className="w-full rounded-xl">
+                    <Link to="/login" onClick={() => setMobileOpen(false)}>
+                      Ingresar con mi correo
+                    </Link>
+                  </Button>
+                )}
                 <p className="text-center text-xs text-muted-foreground">
                   Digital Builders · Portal de validación
                 </p>
               </div>
             </SheetContent>
           </Sheet>
-        ) : (
+        ) : perfil ? (
           <div className="flex items-center gap-3">
             <span className="max-w-[14rem] truncate text-sm text-muted-foreground">
               {nombreVisible(perfil)}
@@ -137,6 +147,10 @@ export function PortalHeader() {
               Cerrar sesión
             </Button>
           </div>
+        ) : (
+          <Button asChild variant="outline" size="sm">
+            <Link to="/login">Ingresar</Link>
+          </Button>
         )}
       </div>
     </header>

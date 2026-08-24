@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
+import { Link as RouterLink } from "@tanstack/react-router";
+
 import { usePerfil } from "@/hooks/use-perfil";
 import { ESTADOS, fetchAvance, fetchProyectos, suscribirPortal, type Estado } from "@/lib/portal";
 
@@ -37,7 +39,7 @@ function BarraEstados({ conteo, total }: { conteo: Record<Estado, number>; total
 
 function ProyectosPage() {
   const queryClient = useQueryClient();
-  const { data: perfil, isPending: cargandoPerfil, error: errorPerfil } = usePerfil();
+  const { data: perfil, error: errorPerfil } = usePerfil();
   const proyectos = useQuery({ queryKey: ["proyectos"], queryFn: fetchProyectos });
   const avance = useQuery({ queryKey: ["avance"], queryFn: fetchAvance });
 
@@ -45,19 +47,6 @@ function ProyectosPage() {
     () => suscribirPortal(() => void queryClient.invalidateQueries({ queryKey: ["avance"] })),
     [queryClient],
   );
-
-  if (cargandoPerfil) {
-    return (
-      <main className="mx-auto max-w-5xl px-4 py-16 text-sm text-muted-foreground">Cargando…</main>
-    );
-  }
-  if (errorPerfil) {
-    return (
-      <main className="mx-auto max-w-5xl px-4 py-16">
-        <p className="text-sm text-destructive">Ese correo no tiene acceso al portal.</p>
-      </main>
-    );
-  }
 
   const total = { pendiente: 0, validado: 0, con_cambios: 0, no_va: 0 } as Record<Estado, number>;
   for (const c of avance.data?.values() ?? []) {
@@ -75,8 +64,25 @@ function ProyectosPage() {
       </h1>
       <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
         Revisá cada funcionalidad, marcá su estado y dejá comentarios. Todo queda registrado con
-        autor y fecha{perfil ? `, ${perfil.nombre ?? perfil.email}` : ""}.
+        autor y fecha.
       </p>
+
+      {!perfil && !errorPerfil && (
+        <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+          <span>
+            Estás en <strong className="text-foreground">modo lectura</strong>. Para validar o
+            comentar,
+          </span>
+          <RouterLink to="/login" className="font-medium text-foreground underline">
+            ingresá con tu correo
+          </RouterLink>
+        </div>
+      )}
+      {errorPerfil ? (
+        <p className="mt-5 text-sm text-destructive">
+          Tu correo no está en la lista de invitados: podés mirar, pero no validar.
+        </p>
+      ) : null}
 
       {totalFuncs > 0 && (
         <div className="mt-8 rounded-2xl border border-border bg-card p-5">

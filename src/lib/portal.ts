@@ -9,9 +9,14 @@ export type Validacion = Database["public"]["Tables"]["validaciones"]["Row"];
 export type Autor = {
   id: string;
   nombre: string | null;
-  email: string;
   lado: Database["public"]["Enums"]["org_side"];
 };
+
+/** Nombre visible de un autor; sin nombre cae a la etiqueta de su lado. */
+export function etiquetaAutor(autor: Autor | null): string {
+  if (!autor) return "—";
+  return autor.nombre?.trim() || (autor.lado === "dac" ? "Equipo DAC" : "Digital Builders");
+}
 
 export type Comentario = Database["public"]["Tables"]["comentarios"]["Row"] & {
   autor: Autor | null;
@@ -95,7 +100,7 @@ export async function fetchFuncionalidades(proyectoId: string): Promise<Funciona
       .order("orden"),
     supabase
       .from("comentarios")
-      .select("*, autor:profiles(id, nombre, email, lado), funcionalidades!inner(proyecto_id)")
+      .select("*, autor:profiles(id, nombre, lado), funcionalidades!inner(proyecto_id)")
       .eq("funcionalidades.proyecto_id", proyectoId)
       .order("creado_en"),
   ]);

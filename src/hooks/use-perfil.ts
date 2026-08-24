@@ -1,15 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { supabase } from "@/integrations/supabase/client";
 import { asegurarPerfil, type Perfil } from "@/lib/perfil";
 
 /**
- * Garantiza que el usuario logueado tenga su fila en `profiles`.
- * Sin esto, todas las políticas RLS le niegan el acceso.
+ * Perfil del usuario logueado, o null en modo lectura (sin sesión).
+ * Con sesión, garantiza la fila en `profiles`; sin ella las políticas RLS
+ * dejan leer pero no escribir.
  */
 export function usePerfil() {
-  return useQuery<Perfil>({
+  return useQuery<Perfil | null>({
     queryKey: ["perfil"],
-    queryFn: asegurarPerfil,
+    queryFn: async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) return null;
+      return asegurarPerfil();
+    },
     staleTime: 5 * 60 * 1000,
     retry: false,
   });
