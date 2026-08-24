@@ -32,6 +32,30 @@ export const ESTADOS: Record<Estado, { etiqueta: string; color: string; fondo: s
 
 export const ORDEN_ESTADOS: Estado[] = ["pendiente", "validado", "con_cambios", "no_va"];
 
+/**
+ * El mismo cronograma que la propuesta comercial: seis meses con sus titulares.
+ * El mes 6 es colchon de estabilizacion y no recibe funcionalidades.
+ */
+export const MESES = [
+  { n: 1, titulo: "Cimientos" },
+  { n: 2, titulo: "DAC toma forma" },
+  { n: 3, titulo: "DAC opera · GA nace" },
+  { n: 4, titulo: "Transaccional" },
+  { n: 5, titulo: "Cierre total — producción" },
+  { n: 6, titulo: "Colchón" },
+] as const;
+
+/** "Mes 2" -> [2] · "Meses 2-3" -> [2, 3] · null -> [] */
+export function mesesDe(mesObjetivo: string | null): number[] {
+  const m = mesObjetivo?.match(/(\d+)(?:\s*-\s*(\d+))?/);
+  if (!m) return [];
+  const desde = Number(m[1]);
+  const hasta = m[2] ? Number(m[2]) : desde;
+  const out: number[] = [];
+  for (let i = desde; i <= hasta; i++) out.push(i);
+  return out;
+}
+
 export async function fetchProyectos(): Promise<Proyecto[]> {
   const { data, error } = await supabase.from("proyectos").select("*").order("orden");
   if (error) throw error;

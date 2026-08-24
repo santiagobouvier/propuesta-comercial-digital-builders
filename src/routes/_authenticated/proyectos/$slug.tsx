@@ -6,11 +6,13 @@ import { usePerfil } from "@/hooks/use-perfil";
 import { nombreVisible } from "@/lib/perfil";
 import {
   ESTADOS,
+  MESES,
   ORDEN_ESTADOS,
   agregarComentario,
   cambiarEstado,
   fetchFuncionalidades,
   fetchProyecto,
+  mesesDe,
   suscribirPortal,
   type Comentario,
   type Estado,
@@ -305,12 +307,16 @@ function DetalleProyecto() {
   );
 
   const [filtro, setFiltro] = useState<Estado | "todos">("todos");
+  const [mesFiltro, setMesFiltro] = useState<number | null>(null);
   const [busqueda, setBusqueda] = useState("");
 
   const visibles = useMemo(() => {
     let lista = funcionalidades.data ?? [];
     if (filtro !== "todos") {
       lista = lista.filter((f) => (f.validaciones?.estado ?? "pendiente") === filtro);
+    }
+    if (mesFiltro !== null) {
+      lista = lista.filter((f) => mesesDe(f.mes_objetivo).includes(mesFiltro));
     }
     const q = busqueda.trim().toLowerCase();
     if (q) {
@@ -319,7 +325,7 @@ function DetalleProyecto() {
       );
     }
     return lista;
-  }, [funcionalidades.data, filtro, busqueda]);
+  }, [funcionalidades.data, filtro, mesFiltro, busqueda]);
 
   if (proyecto.isPending || !perfil) {
     return (
@@ -387,6 +393,86 @@ function DetalleProyecto() {
           )}
         </div>
       </div>
+
+      {/* Cronograma del proyecto: los mismos seis meses del roadmap de la propuesta */}
+      <section
+        className="mt-6 rounded-2xl border border-border bg-card p-5"
+        aria-label="Cronograma"
+      >
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="text-sm font-medium text-foreground">Cronograma del proyecto</h2>
+          <p className="text-xs text-muted-foreground">El mismo plan de la propuesta, mes a mes</p>
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+          {MESES.map((mes) => {
+            const enMes = todas.filter((f) => mesesDe(f.mes_objetivo).includes(mes.n));
+            const validadas = enMes.filter(
+              (f) => (f.validaciones?.estado ?? "pendiente") === "validado",
+            ).length;
+            const activo = enMes.length > 0;
+            const elegido = mesFiltro === mes.n;
+            return (
+              <button
+                key={mes.n}
+                type="button"
+                disabled={!activo}
+                onClick={() => setMesFiltro(elegido ? null : mes.n)}
+                aria-pressed={elegido}
+                className={`rounded-xl border p-3 text-left transition ${
+                  activo ? "hover:border-foreground/30" : "cursor-default opacity-45"
+                } ${mes.n === 6 ? "border-dashed" : ""}`}
+                style={
+                  elegido
+                    ? { borderColor: p.color, background: `${p.color}14` }
+                    : { borderColor: "var(--border)" }
+                }
+              >
+                <p
+                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
+                  style={{ color: activo ? p.color : "var(--muted-foreground)" }}
+                >
+                  Mes 0{mes.n}
+                </p>
+                <p className="mt-1 text-[12px] font-medium leading-snug text-foreground">
+                  {mes.titulo}
+                </p>
+                {activo ? (
+                  <>
+                    <p className="mt-2 text-[11px] text-muted-foreground">
+                      {validadas}/{enMes.length} validadas
+                    </p>
+                    <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${(validadas / enMes.length) * 100}%`,
+                          background: p.color,
+                        }}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <p className="mt-2 text-[11px] text-muted-foreground">
+                    {mes.n === 6 ? "Margen de estabilización" : "Sin trabajo de este proyecto"}
+                  </p>
+                )}
+              </button>
+            );
+          })}
+        </div>
+        {mesFiltro !== null && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Mostrando solo el Mes 0{mesFiltro} ·{" "}
+            <button
+              type="button"
+              onClick={() => setMesFiltro(null)}
+              className="text-foreground underline"
+            >
+              ver todo
+            </button>
+          </p>
+        )}
+      </section>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-1.5">
