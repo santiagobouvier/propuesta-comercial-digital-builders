@@ -1,5 +1,11 @@
 # Prompts para Lovable — Portal de validación DAC
 
+> ⚠️ **ESTADO (23/08/2026):** los Pasos 1 a 5 ya están hechos y en `main`.
+> Los pasos 3, 4 y 5 (detalle de proyecto, tiempo real e índice) los escribió
+> Claude directamente en el repo: **NO le mandes esos prompts a Lovable** o va a
+> construir una segunda versión encima y van a chocar. Solo queda pendiente el
+> Paso 6 (acta en PDF), que también conviene pedírselo a Claude.
+
 Ejecutarlos **en orden**. Esperá a que cada uno termine y compile antes del siguiente.
 Si Lovable se va por las ramas, no insistas sobre el mismo prompt: abrí uno nuevo
 pidiendo solo la corrección puntual.
