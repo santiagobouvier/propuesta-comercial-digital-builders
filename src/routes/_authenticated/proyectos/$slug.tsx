@@ -5,11 +5,11 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { usePerfil } from "@/hooks/use-perfil";
 import {
   ESTADOS,
-  etiquetaAutor,
   MESES,
   ORDEN_ESTADOS,
   agregarComentario,
   cambiarEstado,
+  etiquetaAutor,
   fetchFuncionalidades,
   fetchProyecto,
   mesesDe,
@@ -31,11 +31,14 @@ export const Route = createFileRoute("/_authenticated/proyectos/$slug")({
 
 const fechaCorta = new Intl.DateTimeFormat("es-UY", { day: "2-digit", month: "short" });
 
+/** Grupo 0: funcionalidades sin mes (transversales a todo el proyecto). */
+const SIN_MES = 0;
+
 function PildoraEstado({ estado }: { estado: Estado }) {
   const e = ESTADOS[estado];
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
+      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium"
       style={{ color: e.color, background: e.fondo }}
     >
       <span className="h-1.5 w-1.5 rounded-full" style={{ background: e.color }} />
@@ -75,14 +78,16 @@ function HiloComentarios({
   });
 
   return (
-    <div className="mt-4 space-y-3 border-t border-border pt-4">
+    <div className="db-hair mt-4 space-y-3 pt-4">
       {funcionalidad.comentarios.map((c: Comentario) => (
         <div
           key={c.id}
-          className={`rounded-xl p-3 text-sm ${c.interno ? "border border-dashed border-amber-500/40 bg-amber-500/5" : "bg-muted/60"}`}
+          className={`rounded-2xl p-3.5 text-sm ${
+            c.interno ? "border border-dashed border-amber-500/40 bg-amber-500/5" : "db-soft"
+          }`}
         >
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <span className="font-medium text-foreground">{etiquetaAutor(c.autor)}</span>
+            <span className="font-medium text-white">{etiquetaAutor(c.autor)}</span>
             <span
               className="rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
               style={
@@ -98,19 +103,17 @@ function HiloComentarios({
                 Interno
               </span>
             )}
-            <span className="ml-auto text-xs text-muted-foreground">
+            <span className="ml-auto text-xs text-white/40">
               {fechaCorta.format(new Date(c.creado_en))}
             </span>
           </div>
-          <p className="mt-1.5 whitespace-pre-wrap leading-relaxed text-foreground/90">
-            {c.cuerpo}
-          </p>
+          <p className="mt-1.5 whitespace-pre-wrap leading-relaxed text-white/80">{c.cuerpo}</p>
         </div>
       ))}
 
       {!usuarioId ? (
-        <p className="text-sm text-muted-foreground">
-          <Link to="/login" className="font-medium text-foreground underline">
+        <p className="text-sm text-white/45">
+          <Link to="/login" className="font-medium text-white underline">
             Ingresá con tu correo
           </Link>{" "}
           para comentar.
@@ -128,11 +131,11 @@ function HiloComentarios({
             onChange={(ev) => setCuerpo(ev.target.value)}
             rows={2}
             placeholder="Escribí un comentario…"
-            className="w-full resize-y rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none"
+            className="db-soft w-full resize-y rounded-2xl px-3.5 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-white/25 focus:outline-none"
           />
           <div className="flex items-center justify-between gap-3">
             {esDB ? (
-              <label className="flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+              <label className="flex cursor-pointer items-center gap-2 text-xs text-white/45">
                 <input
                   type="checkbox"
                   checked={interno}
@@ -147,13 +150,13 @@ function HiloComentarios({
             <button
               type="submit"
               disabled={!cuerpo.trim() || enviar.isPending}
-              className="rounded-xl bg-foreground px-4 py-1.5 text-sm font-medium text-background transition hover:opacity-90 disabled:opacity-40"
+              className="rounded-xl bg-white px-4 py-1.5 text-sm font-semibold text-[#06070B] transition hover:bg-white/90 disabled:opacity-40"
             >
               {enviar.isPending ? "Enviando…" : "Comentar"}
             </button>
           </div>
           {enviar.isError && (
-            <p className="text-xs text-destructive">No se pudo enviar. Probá de nuevo.</p>
+            <p className="text-xs text-red-400">No se pudo enviar. Probá de nuevo.</p>
           )}
         </form>
       )}
@@ -178,6 +181,7 @@ function TarjetaFuncionalidad({
   const [abierta, setAbierta] = useState(false);
   const estado: Estado = f.validaciones?.estado ?? "pendiente";
   const requisitos = (f.detalle ?? "").split("\n").filter(Boolean);
+  const meses = mesesDe(f.mes_objetivo);
 
   const mutarEstado = useMutation({
     mutationFn: (nuevo: Estado) => {
@@ -217,25 +221,27 @@ function TarjetaFuncionalidad({
   });
 
   return (
-    <article className="rounded-2xl border border-border bg-card p-5">
+    <article className="db-glass overflow-hidden rounded-3xl p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="min-w-0">
-          <p className="font-mono text-[11px] tracking-wide" style={{ color }}>
+          <p className="db-eyebrow" style={{ color }}>
             {f.codigo}
-            {f.mes_objetivo && (
-              <span className="ml-2 text-muted-foreground">· {f.mes_objetivo}</span>
+            {meses.length > 1 && (
+              <span className="ml-2 normal-case tracking-normal text-white/35">
+                continúa en mes {meses[meses.length - 1]}
+              </span>
             )}
           </p>
-          <h3 className="mt-1 text-[15px] font-semibold leading-snug text-foreground">
+          <h3 className="mt-1.5 text-[16px] font-semibold leading-snug tracking-tight text-white">
             {f.titulo}
           </h3>
         </div>
         <PildoraEstado estado={estado} />
       </div>
 
-      <ul className="mt-3 space-y-1.5">
+      <ul className="mt-3.5 space-y-1.5">
         {requisitos.map((r, i) => (
-          <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-foreground/75">
+          <li key={i} className="flex gap-2.5 text-[13.5px] leading-relaxed text-white/60">
             <span
               className="mt-[9px] h-1 w-1 shrink-0 rounded-full"
               style={{ background: color }}
@@ -264,7 +270,7 @@ function TarjetaFuncionalidad({
                         background: ESTADOS[e].fondo,
                         borderColor: ESTADOS[e].color,
                       }
-                    : { color: "var(--muted-foreground)", borderColor: "var(--border)" }
+                    : { color: "rgba(255,255,255,.45)", borderColor: "rgba(255,255,255,.12)" }
                 }
               >
                 {ESTADOS[e].etiqueta}
@@ -272,13 +278,13 @@ function TarjetaFuncionalidad({
             ))}
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-white/40">
             {esDB ? (
               "La validación la hace el equipo de DAC."
             ) : (
               <>
                 Para validar,{" "}
-                <Link to="/login" className="font-medium text-foreground underline">
+                <Link to="/login" className="font-medium text-white underline">
                   ingresá con tu correo
                 </Link>
                 .
@@ -290,22 +296,17 @@ function TarjetaFuncionalidad({
         <button
           type="button"
           onClick={() => setAbierta(!abierta)}
-          className="text-xs font-medium text-muted-foreground transition hover:text-foreground"
+          className="db-eyebrow text-white/40 transition hover:text-white"
         >
-          {abierta ? "Ocultar" : "Comentarios"} ({f.comentarios.length})
+          Comentarios ({f.comentarios.length})
         </button>
       </div>
 
       {mutarEstado.isError && (
-        <p className="mt-2 text-xs text-destructive">
+        <p className="mt-2 text-xs text-red-400">
           {mutarEstado.error instanceof Error
             ? mutarEstado.error.message
             : "No se pudo guardar el cambio."}
-        </p>
-      )}
-      {f.validaciones?.actualizado_por && estado !== "pendiente" && (
-        <p className="mt-2 text-[11px] text-muted-foreground">
-          Actualizado el {fechaCorta.format(new Date(f.validaciones.actualizado_en))}
         </p>
       )}
 
@@ -336,16 +337,12 @@ function DetalleProyecto() {
   );
 
   const [filtro, setFiltro] = useState<Estado | "todos">("todos");
-  const [mesFiltro, setMesFiltro] = useState<number | null>(null);
   const [busqueda, setBusqueda] = useState("");
 
   const visibles = useMemo(() => {
     let lista = funcionalidades.data ?? [];
     if (filtro !== "todos") {
       lista = lista.filter((f) => (f.validaciones?.estado ?? "pendiente") === filtro);
-    }
-    if (mesFiltro !== null) {
-      lista = lista.filter((f) => mesesDe(f.mes_objetivo).includes(mesFiltro));
     }
     const q = busqueda.trim().toLowerCase();
     if (q) {
@@ -354,18 +351,30 @@ function DetalleProyecto() {
       );
     }
     return lista;
-  }, [funcionalidades.data, filtro, mesFiltro, busqueda]);
+  }, [funcionalidades.data, filtro, busqueda]);
+
+  /** La página se organiza cronológicamente: cada funcionalidad cuelga de su mes de inicio. */
+  const grupos = useMemo(() => {
+    const por = new Map<number, FuncionalidadConEstado[]>();
+    for (const f of visibles) {
+      const clave = mesesDe(f.mes_objetivo)[0] ?? SIN_MES;
+      const lista = por.get(clave) ?? [];
+      lista.push(f);
+      por.set(clave, lista);
+    }
+    return por;
+  }, [visibles]);
 
   if (proyecto.isPending || cargandoPerfil) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-16 text-sm text-muted-foreground">Cargando…</main>
+      <main className="db-z mx-auto max-w-3xl px-5 py-24 text-sm text-white/45">Cargando…</main>
     );
   }
   if (proyecto.isError) {
     return (
-      <main className="mx-auto max-w-4xl px-4 py-16">
-        <p className="text-sm text-destructive">No encontramos ese proyecto.</p>
-        <Link to="/proyectos" className="mt-3 inline-block text-sm text-foreground underline">
+      <main className="db-z mx-auto max-w-3xl px-5 py-24">
+        <p className="text-sm text-red-400">No encontramos ese proyecto.</p>
+        <Link to="/proyectos" className="mt-3 inline-block text-sm text-white underline">
           Volver a proyectos
         </Link>
       </main>
@@ -378,24 +387,33 @@ function DetalleProyecto() {
   for (const f of todas) conteo[f.validaciones?.estado ?? "pendiente"] += 1;
   const esDAC = perfil?.lado === "dac";
   const esDB = perfil?.lado === "digital_builders";
+  const usuarioId = perfil?.id ?? null;
+
+  const ordenGrupos = [SIN_MES, 1, 2, 3, 4, 5, 6].filter((m) => grupos.has(m));
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10">
-      <Link
-        to="/proyectos"
-        className="text-xs font-medium text-muted-foreground transition hover:text-foreground"
-      >
+    <main className="db-z mx-auto w-full max-w-3xl px-5 pb-24 pt-8 sm:pt-12">
+      <Link to="/proyectos" className="db-eyebrow text-white/40 transition hover:text-white">
         ← Todos los proyectos
       </Link>
 
-      <div
-        className="mt-4 rounded-2xl border border-border bg-card p-6"
-        style={{ borderTopColor: p.color, borderTopWidth: 3 }}
-      >
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">{p.nombre}</h1>
-        {p.bajada && <p className="mt-1 text-sm text-muted-foreground">{p.bajada}</p>}
+      <div className="mt-6 flex items-center gap-3">
+        <span className="db-eyebrow" style={{ color: p.color }}>
+          Validación de alcance
+        </span>
+        <span className="h-px w-8 bg-white/15" />
+        <span className="db-eyebrow text-white/35">{p.bajada}</span>
+      </div>
+      <h1 className="db-display db-grad mt-3 text-[clamp(2.4rem,9vw,4rem)]">{p.nombre}</h1>
 
-        <div className="mt-5 flex h-2 w-full overflow-hidden rounded-full bg-muted">
+      <div className="db-glass mt-7 rounded-3xl p-5 sm:p-6">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <p className="text-sm font-medium text-white">
+            {conteo.validado}/{todas.length} funcionalidades validadas
+          </p>
+          <p className="db-eyebrow text-white/30">Se actualiza en vivo</p>
+        </div>
+        <div className="mt-3 flex h-1.5 w-full overflow-hidden rounded-full bg-white/[0.08]">
           {(["validado", "con_cambios", "no_va"] as Estado[]).map((e) =>
             conteo[e] && todas.length ? (
               <div
@@ -408,10 +426,7 @@ function DetalleProyecto() {
             ) : null,
           )}
         </div>
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-          <span className="font-mono text-foreground">
-            {conteo.validado}/{todas.length} validadas
-          </span>
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/45">
           {(Object.keys(ESTADOS) as Estado[]).map((e) =>
             conteo[e] ? (
               <span key={e} className="inline-flex items-center gap-1.5">
@@ -423,86 +438,6 @@ function DetalleProyecto() {
         </div>
       </div>
 
-      {/* Cronograma del proyecto: los mismos seis meses del roadmap de la propuesta */}
-      <section
-        className="mt-6 rounded-2xl border border-border bg-card p-5"
-        aria-label="Cronograma"
-      >
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-sm font-medium text-foreground">Cronograma del proyecto</h2>
-          <p className="text-xs text-muted-foreground">El mismo plan de la propuesta, mes a mes</p>
-        </div>
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-          {MESES.map((mes) => {
-            const enMes = todas.filter((f) => mesesDe(f.mes_objetivo).includes(mes.n));
-            const validadas = enMes.filter(
-              (f) => (f.validaciones?.estado ?? "pendiente") === "validado",
-            ).length;
-            const activo = enMes.length > 0;
-            const elegido = mesFiltro === mes.n;
-            return (
-              <button
-                key={mes.n}
-                type="button"
-                disabled={!activo}
-                onClick={() => setMesFiltro(elegido ? null : mes.n)}
-                aria-pressed={elegido}
-                className={`rounded-xl border p-3 text-left transition ${
-                  activo ? "hover:border-foreground/30" : "cursor-default opacity-45"
-                } ${mes.n === 6 ? "border-dashed" : ""}`}
-                style={
-                  elegido
-                    ? { borderColor: p.color, background: `${p.color}14` }
-                    : { borderColor: "var(--border)" }
-                }
-              >
-                <p
-                  className="font-mono text-[10px] uppercase tracking-[0.18em]"
-                  style={{ color: activo ? p.color : "var(--muted-foreground)" }}
-                >
-                  Mes 0{mes.n}
-                </p>
-                <p className="mt-1 text-[12px] font-medium leading-snug text-foreground">
-                  {mes.titulo}
-                </p>
-                {activo ? (
-                  <>
-                    <p className="mt-2 text-[11px] text-muted-foreground">
-                      {validadas}/{enMes.length} validadas
-                    </p>
-                    <div className="mt-1.5 h-1 w-full overflow-hidden rounded-full bg-muted">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{
-                          width: `${(validadas / enMes.length) * 100}%`,
-                          background: p.color,
-                        }}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <p className="mt-2 text-[11px] text-muted-foreground">
-                    {mes.n === 6 ? "Margen de estabilización" : "Sin trabajo de este proyecto"}
-                  </p>
-                )}
-              </button>
-            );
-          })}
-        </div>
-        {mesFiltro !== null && (
-          <p className="mt-3 text-xs text-muted-foreground">
-            Mostrando solo el Mes 0{mesFiltro} ·{" "}
-            <button
-              type="button"
-              onClick={() => setMesFiltro(null)}
-              className="text-foreground underline"
-            >
-              ver todo
-            </button>
-          </p>
-        )}
-      </section>
-
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-1.5">
           {(["todos", ...ORDEN_ESTADOS] as (Estado | "todos")[]).map((e) => (
@@ -510,10 +445,10 @@ function DetalleProyecto() {
               key={e}
               type="button"
               onClick={() => setFiltro(e)}
-              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+              className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition ${
                 filtro === e
-                  ? "border-foreground/50 bg-foreground/10 text-foreground"
-                  : "border-border text-muted-foreground hover:text-foreground"
+                  ? "border-white/50 bg-white/10 text-white"
+                  : "border-white/10 text-white/45 hover:text-white"
               }`}
             >
               {e === "todos" ? `Todas (${todas.length})` : `${ESTADOS[e].etiqueta} (${conteo[e]})`}
@@ -525,30 +460,70 @@ function DetalleProyecto() {
           value={busqueda}
           onChange={(ev) => setBusqueda(ev.target.value)}
           placeholder="Buscar…"
-          className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-foreground/30 focus:outline-none sm:w-52"
+          className="db-soft w-full rounded-2xl px-3.5 py-2 text-sm text-white placeholder:text-white/30 focus:border-white/25 focus:outline-none sm:w-48"
         />
       </div>
 
-      <div className="mt-5 space-y-4">
+      {/* Línea de tiempo: el proyecto mes a mes, como el roadmap de la propuesta */}
+      <ol className="relative mt-10">
+        <div
+          className="absolute bottom-4 left-[15px] top-2 w-px"
+          style={{
+            background: `linear-gradient(to bottom, ${p.color}80, ${p.color}22, transparent)`,
+          }}
+        />
         {funcionalidades.isPending && (
-          <p className="text-sm text-muted-foreground">Cargando funcionalidades…</p>
+          <p className="pl-11 text-sm text-white/45">Cargando funcionalidades…</p>
         )}
-        {visibles.map((f) => (
-          <TarjetaFuncionalidad
-            key={f.id}
-            f={f}
-            color={p.color}
-            usuarioId={perfil?.id ?? null}
-            esDAC={esDAC}
-            esDB={esDB}
-          />
-        ))}
-        {!funcionalidades.isPending && !visibles.length && (
-          <p className="rounded-2xl border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+
+        {ordenGrupos.map((m) => {
+          const lista = grupos.get(m)!;
+          const validadas = lista.filter(
+            (f) => (f.validaciones?.estado ?? "pendiente") === "validado",
+          ).length;
+          const titulo =
+            m === SIN_MES ? "Transversal" : (MESES.find((x) => x.n === m)?.titulo ?? "");
+          return (
+            <li key={m} className="relative pb-10 pl-11 last:pb-0">
+              <span
+                className="absolute left-0 top-0 grid h-[31px] w-[31px] place-items-center rounded-full border bg-[#06070B]"
+                style={{ borderColor: `${p.color}66` }}
+              >
+                <span className="h-2 w-2 rounded-full" style={{ background: p.color }} />
+              </span>
+
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <p className="db-eyebrow text-white/35">
+                  {m === SIN_MES ? "Todo el proyecto" : `Mes 0${m}`}
+                </p>
+                <h2 className="text-[19px] font-semibold tracking-tight text-white">{titulo}</h2>
+                <span className="db-eyebrow ml-auto text-white/30">
+                  {validadas}/{lista.length} validadas
+                </span>
+              </div>
+
+              <div className="mt-4 space-y-4">
+                {lista.map((f) => (
+                  <TarjetaFuncionalidad
+                    key={f.id}
+                    f={f}
+                    color={p.color}
+                    usuarioId={usuarioId}
+                    esDAC={esDAC}
+                    esDB={esDB}
+                  />
+                ))}
+              </div>
+            </li>
+          );
+        })}
+
+        {!funcionalidades.isPending && !ordenGrupos.length && (
+          <p className="db-soft rounded-3xl p-6 text-center text-sm text-white/45">
             Ninguna funcionalidad coincide con el filtro.
           </p>
         )}
-      </div>
+      </ol>
     </main>
   );
 }

@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_authenticated/proyectos/")({
 function BarraEstados({ conteo, total }: { conteo: Record<Estado, number>; total: number }) {
   if (!total) return null;
   return (
-    <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-muted">
+    <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-white/[0.08]">
       {(["validado", "con_cambios", "no_va"] as Estado[]).map((e) =>
         conteo[e] ? (
           <div
@@ -55,47 +55,48 @@ function ProyectosPage() {
   const totalFuncs = Object.values(total).reduce((a, b) => a + b, 0);
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-10">
-      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-        DAC · Grupo Agencia · 2026
-      </p>
-      <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
+    <main className="db-z mx-auto w-full max-w-3xl px-5 pb-24 pt-8 sm:pt-12">
+      <div className="flex items-center gap-3">
+        <span className="db-eyebrow text-[#10B981]">DAC · Grupo Agencia</span>
+        <span className="h-px w-8 bg-white/15" />
+        <span className="db-eyebrow text-white/35">2026</span>
+      </div>
+      <h1 className="db-display db-grad mt-3 text-[clamp(2.2rem,8.5vw,3.6rem)]">
         Validación de alcance
       </h1>
-      <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/50">
         Revisá cada funcionalidad, marcá su estado y dejá comentarios. Todo queda registrado con
         autor y fecha.
       </p>
 
       {!perfil && !errorPerfil && (
-        <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+        <div className="db-soft mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl px-4 py-3 text-sm text-white/50">
           <span>
-            Estás en <strong className="text-foreground">modo lectura</strong>. Para validar o
-            comentar,
+            Estás en <strong className="text-white">modo lectura</strong>. Para validar o comentar,
           </span>
-          <RouterLink to="/login" className="font-medium text-foreground underline">
+          <RouterLink to="/login" className="font-medium text-white underline">
             ingresá con tu correo
           </RouterLink>
         </div>
       )}
       {errorPerfil ? (
-        <p className="mt-5 text-sm text-destructive">
+        <p className="mt-5 text-sm text-red-400">
           Tu correo no está en la lista de invitados: podés mirar, pero no validar.
         </p>
       ) : null}
 
       {totalFuncs > 0 && (
-        <div className="mt-8 rounded-2xl border border-border bg-card p-5">
+        <div className="db-glass mt-8 rounded-3xl p-5 sm:p-6">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <p className="text-sm font-medium text-foreground">Avance global</p>
-            <p className="font-mono text-sm text-muted-foreground">
+            <p className="text-sm font-medium text-white">Avance global</p>
+            <p className="db-eyebrow text-white/30">
               {total.validado}/{totalFuncs} validadas
             </p>
           </div>
           <div className="mt-3">
             <BarraEstados conteo={total} total={totalFuncs} />
           </div>
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/45">
             {(Object.keys(ESTADOS) as Estado[]).map((e) => (
               <span key={e} className="inline-flex items-center gap-1.5">
                 <span className="h-2 w-2 rounded-full" style={{ background: ESTADOS[e].color }} />
@@ -106,7 +107,7 @@ function ProyectosPage() {
         </div>
       )}
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
         {proyectos.data?.map((p) => {
           const c = avance.data?.get(p.id);
           const n = c ? Object.values(c).reduce((a, b) => a + b, 0) : 0;
@@ -115,20 +116,20 @@ function ProyectosPage() {
               key={p.id}
               to="/proyectos/$slug"
               params={{ slug: p.slug }}
-              className="group rounded-2xl border border-border bg-card p-5 transition hover:border-foreground/25"
+              className="db-glass group rounded-3xl p-5 transition hover:border-white/25 sm:p-6"
               style={{ borderTopColor: p.color, borderTopWidth: 2 }}
             >
               <div className="flex items-baseline justify-between gap-3">
-                <h2 className="text-lg font-semibold text-foreground">{p.nombre}</h2>
+                <h2 className="text-[19px] font-semibold tracking-tight text-white">{p.nombre}</h2>
                 {c && (
-                  <span className="font-mono text-xs text-muted-foreground">
+                  <span className="db-eyebrow text-white/30">
                     {c.validado}/{n}
                   </span>
                 )}
               </div>
-              {p.bajada && <p className="mt-1 text-sm text-muted-foreground">{p.bajada}</p>}
+              {p.bajada && <p className="mt-1 text-sm text-white/45">{p.bajada}</p>}
               <div className="mt-4">{c && <BarraEstados conteo={c} total={n} />}</div>
-              <p className="mt-3 text-xs text-muted-foreground opacity-0 transition group-hover:opacity-100">
+              <p className="db-eyebrow mt-4 text-white/35 transition group-hover:text-white">
                 Abrir detalle →
               </p>
             </Link>

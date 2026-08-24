@@ -126,3 +126,37 @@
     font-family: var(--font-display);
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   Lenguaje visual del portal — el mismo de la propuesta comercial.
+   Fondo aura + grilla, tarjetas glass, tipografia display y eyebrows.
+   ══════════════════════════════════════════════════════════════════ */
+.db-fondo{position:relative;min-height:100vh;background:#06070B;color:rgba(255,255,255,.9);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.db-fondo::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(90% 50% at 12% 0%,rgba(59,130,246,.20),transparent 65%),
+    radial-gradient(70% 45% at 100% 28%,rgba(139,92,246,.15),transparent 70%),
+    radial-gradient(75% 50% at 0% 100%,rgba(16,185,129,.13),transparent 70%)}
+.db-fondo::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 75%);
+          mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 75%)}
+.db-z{position:relative;z-index:1}
+.db-glass{background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:0 1px 0 0 rgba(255,255,255,.06) inset,0 30px 60px -30px rgba(0,0,0,.9)}
+@media(min-width:1024px){.db-glass{-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}}
+.db-soft{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.075)}
+.db-eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10px;
+  letter-spacing:.24em;text-transform:uppercase}
+.db-display{font-weight:800;letter-spacing:-.04em;line-height:1.04}
+.db-grad{background:linear-gradient(180deg,#fff 45%,rgba(255,255,255,.68));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.db-hair{border-top:1px solid rgba(255,255,255,.07)}
+.logo-db{position:relative;display:inline-block;width:1em;height:1em;
+  border:.085em solid #fff;flex:none}
+.logo-db::before{content:'';position:absolute;top:12%;right:10%;width:36%;height:36%;background:#fff}
+.logo-db::after{content:'';position:absolute;bottom:10%;left:10%;width:40%;height:40%;background:#8FCCF0}

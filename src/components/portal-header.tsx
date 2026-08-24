@@ -38,22 +38,14 @@ export function PortalHeader() {
       to="/proyectos"
       className="group flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md"
     >
-      <span className="relative grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-xl bg-card ring-1 ring-border group-hover:ring-primary/40 transition-all duration-300">
-        <img
-          src={logoIcon.url}
-          alt=""
-          className="h-6 w-6 object-contain transition-transform duration-300 group-hover:scale-110"
-        />
-      </span>
-      <span className="font-display text-base font-semibold tracking-tight text-foreground">
-        Digital Builders
-      </span>
+      <span className="logo-db text-[17px]" aria-hidden="true" />
+      <span className="text-[15px] font-semibold tracking-tight text-white">Digital Builders</span>
     </Link>
   );
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+    <header className="db-z sticky top-0 z-40 px-4 pt-3">
+      <div className="db-glass mx-auto flex max-w-3xl items-center justify-between gap-3 rounded-2xl px-4 py-2.5">
         {Logo}
 
         {isMobile ? (
