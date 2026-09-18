@@ -5,8 +5,10 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { usePerfil } from "@/hooks/use-perfil";
 import {
   ESTADOS,
+  MARCAS,
   MESES,
   ORDEN_ESTADOS,
+  VALIDACION_ABIERTA,
   agregarComentario,
   cambiarEstado,
   etiquetaAutor,
@@ -234,6 +236,14 @@ function TarjetaFuncionalidad({
           </p>
           <h3 className="mt-1.5 text-[16px] font-semibold leading-snug tracking-tight text-white">
             {f.titulo}
+            {f.marca && (
+              <span
+                className="ml-2 inline-flex translate-y-[-1px] rounded-full px-2 py-0.5 align-middle text-[10px] font-semibold uppercase tracking-wide"
+                style={{ color: MARCAS[f.marca].color, background: MARCAS[f.marca].fondo }}
+              >
+                {MARCAS[f.marca].etiqueta}
+              </span>
+            )}
           </h3>
         </div>
         <PildoraEstado estado={estado} />
@@ -252,7 +262,34 @@ function TarjetaFuncionalidad({
       </ul>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        {esDAC ? (
+        {!VALIDACION_ABIERTA ? (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Estado">
+              {ORDEN_ESTADOS.map((e) => (
+                <button
+                  key={e}
+                  type="button"
+                  role="radio"
+                  aria-checked={estado === e}
+                  disabled
+                  className="cursor-not-allowed rounded-full border px-3 py-1.5 text-xs font-medium opacity-40"
+                  style={
+                    estado === e
+                      ? {
+                          color: ESTADOS[e].color,
+                          background: ESTADOS[e].fondo,
+                          borderColor: ESTADOS[e].color,
+                        }
+                      : { color: "rgba(255,255,255,.45)", borderColor: "rgba(255,255,255,.12)" }
+                  }
+                >
+                  {ESTADOS[e].etiqueta}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-white/40">La validación se habilita al inicio del proyecto.</p>
+          </div>
+        ) : esDAC ? (
           <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Estado">
             {ORDEN_ESTADOS.map((e) => (
               <button

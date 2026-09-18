@@ -5,7 +5,14 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { Link as RouterLink } from "@tanstack/react-router";
 
 import { usePerfil } from "@/hooks/use-perfil";
-import { ESTADOS, fetchAvance, fetchProyectos, suscribirPortal, type Estado } from "@/lib/portal";
+import {
+  ESTADOS,
+  VALIDACION_ABIERTA,
+  fetchAvance,
+  fetchProyectos,
+  suscribirPortal,
+  type Estado,
+} from "@/lib/portal";
 
 export const Route = createFileRoute("/_authenticated/proyectos/")({
   head: () => ({
@@ -69,15 +76,24 @@ function ProyectosPage() {
         autor y fecha.
       </p>
 
-      {!perfil && !errorPerfil && (
-        <div className="db-soft mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl px-4 py-3 text-sm text-white/50">
-          <span>
-            Estás en <strong className="text-white">modo lectura</strong>. Para validar o comentar,
-          </span>
-          <RouterLink to="/login" className="font-medium text-white underline">
-            ingresá con tu correo
-          </RouterLink>
+      {!VALIDACION_ABIERTA ? (
+        <div className="db-soft mt-5 rounded-2xl px-4 py-3 text-sm text-white/50">
+          Este portal es la herramienta con la que validaremos cada módulo durante el proyecto.
+          Hasta la firma del contrato se encuentra en <strong className="text-white">modo lectura</strong>.
         </div>
+      ) : (
+        !perfil &&
+        !errorPerfil && (
+          <div className="db-soft mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl px-4 py-3 text-sm text-white/50">
+            <span>
+              Estás en <strong className="text-white">modo lectura</strong>. Para validar o
+              comentar,
+            </span>
+            <RouterLink to="/login" className="font-medium text-white underline">
+              ingresá con tu correo
+            </RouterLink>
+          </div>
+        )
       )}
       {errorPerfil ? (
         <p className="mt-5 text-sm text-red-400">

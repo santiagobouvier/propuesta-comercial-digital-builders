@@ -3,8 +3,34 @@ import type { Database } from "@/integrations/supabase/types";
 
 export type Estado = Database["public"]["Enums"]["estado_funcionalidad"];
 export type Proyecto = Database["public"]["Tables"]["proyectos"]["Row"];
-export type Funcionalidad = Database["public"]["Tables"]["funcionalidades"]["Row"];
 export type Validacion = Database["public"]["Tables"]["validaciones"]["Row"];
+
+/**
+ * Hasta la firma del contrato el portal es una vitrina del alcance: se lee,
+ * se comenta, pero nadie marca estados (ni siquiera el lado dac). Al inicio
+ * del proyecto se pone en `true` y vuelve el comportamiento normal, donde
+ * la RLS sigue siendo la única protección real. No toca la base.
+ */
+export const VALIDACION_ABIERTA = false;
+
+/** Marca del bloque según el Anexo I (columna `funcionalidades.marca`). */
+export type Marca = "incluido" | "terceros" | "inicial" | "evolutivo";
+
+export const MARCAS: Record<Marca, { etiqueta: string; color: string; fondo: string }> = {
+  incluido: { etiqueta: "Incluido", color: "#10B981", fondo: "rgba(16,185,129,.12)" },
+  terceros: {
+    etiqueta: "Sujeto a servicio de terceros",
+    color: "#F5A524",
+    fondo: "rgba(245,165,36,.12)",
+  },
+  inicial: { etiqueta: "Versión inicial", color: "#3B82F6", fondo: "rgba(59,130,246,.12)" },
+  evolutivo: { etiqueta: "Fase evolutiva", color: "#9CA3AF", fondo: "rgba(156,163,175,.12)" },
+};
+
+/** La columna `marca` es posterior a los tipos generados; se extiende acá. */
+export type Funcionalidad = Database["public"]["Tables"]["funcionalidades"]["Row"] & {
+  marca?: Marca | null;
+};
 
 export type Autor = {
   id: string;
@@ -37,17 +63,14 @@ export const ESTADOS: Record<Estado, { etiqueta: string; color: string; fondo: s
 
 export const ORDEN_ESTADOS: Estado[] = ["pendiente", "validado", "con_cambios", "no_va"];
 
-/**
- * El mismo cronograma que la propuesta comercial: seis meses con sus titulares.
- * El mes 6 es colchon de estabilizacion y no recibe funcionalidades.
- */
+/** El mismo cronograma que la propuesta comercial: seis meses con sus titulares. */
 export const MESES = [
   { n: 1, titulo: "Cimientos" },
-  { n: 2, titulo: "DAC toma forma" },
-  { n: 3, titulo: "DAC opera · GA nace" },
+  { n: 2, titulo: "Toma forma" },
+  { n: 3, titulo: "Se opera" },
   { n: 4, titulo: "Transaccional" },
-  { n: 5, titulo: "Cierre total — producción" },
-  { n: 6, titulo: "Colchón" },
+  { n: 5, titulo: "Cierre" },
+  { n: 6, titulo: "Estabilización" },
 ] as const;
 
 /** "Mes 2" -> [2] · "Meses 2-3" -> [2, 3] · null -> [] */
