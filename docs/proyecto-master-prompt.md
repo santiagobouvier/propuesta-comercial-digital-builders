@@ -12,7 +12,8 @@
 Sos el desarrollador principal de **Digital Builders** (estudio de desarrollo web,
 Uruguay, contacto `info@digitalbuilders.net`). El cliente es **DAC / Grupo Agencia**
 (empresa grande de encomiendas y pasajes). Se le está vendiendo el desarrollo de
-**4 plataformas web** por **USD 35.500 + IVA**, según el pliego oficial del 10/08/2026.
+**4 plataformas web** por **USD 32.500 + IVA** (v3, set-2026) más un servicio
+mensual de USD 2.000 + IVA, según el pliego oficial del 10/08/2026.
 
 El repo es `santiagobouvier/digital-builders-hub` (GitHub, rama `main`), conectado a
 **Lovable** (los pushes a main sincronizan con su editor; NUNCA reescribir historia
@@ -59,64 +60,67 @@ explícitamente al dueño.
   Aparece en: overlay de clave, nav, hero ("Preparada por"), pie, favicon.
 - Español rioplatense (vos) en toda la UI.
 
-### 2.3 Secciones (menú fijo con anclas y scroll-spy)
-1. **Hero** `#inicio`: eyebrow "Documento confidencial · 2026", H1 "Propuesta
-   Técnica y Comercial" (se parte en líneas animadas), 4 chips de proyectos con su
-   color, bloque "Preparada por Digital Builders · Desarrollo web & plataformas
-   digitales · Uruguay", CTA "Ver la propuesta" (magnético), indicador de scroll.
-2. **Resumen ejecutivo** `#resumen`: 3 párrafos `[PENDIENTE]` + 4 tarjetas métricas:
-   **4 plataformas · 228 requisitos relevados** (contador animado; "Agrupados en 48
-   funcionalidades, uno por uno desde el pliego") **· ~1.000 hs estimadas ·
-   Entregables demostrables cada mes**.
-3. **Los 4 proyectos** `#proyectos`: tarjeta grande glass por proyecto con hairline
-   superior en su color, descripción `[PENDIENTE]`, `<img loading="lazy">`
-   placeholder SVG de maqueta panorámica, botón **"Abrir detalle y validar"** →
-   `/proyectos/{slug}`, y acordeón "Ver funcionalidades" con los bloques REALES del
-   pliego (título · N requisitos · Mes objetivo, `whitespace-nowrap` en el conteo).
-4. **Cómo trabajamos** `#metodologia`: 3 tarjetas — entregable cada 30 días / UAT
-   con checklist firmado por módulo / testing en 3 capas (automatizado, funcional
-   interno, aceptación del cliente) — + badges de seguridad: sesiones con
-   expiración, alertas de acceso, auditoría, **Ley 18.331**.
-5. **Roadmap** `#roadmap`: timeline de 6 meses, horizontal en desktop y vertical en
-   mobile, riel que **se dibuja con el scroll** y 6 puntos que se encienden en
-   secuencia. Titulares EXACTOS: **Mes 01 Cimientos · Mes 02 DAC toma forma ·
-   Mes 03 DAC opera · GA nace · Mes 04 Transaccional · Mes 05 Cierre total —
-   producción · Mes 06 Colchón** (atenuado, borde punteado, "sin costo adicional").
-   Cada mes lista lo completado por proyecto (bullets con color) y una píldora de
-   ENTREGABLE: M1 "Entorno de staging + design system navegable" · M2 "DAC
-   navegable en staging con contenido real" · M3 "DAC aprobado + primeras vistas de
-   Grupo Agencia" · M4 "Grupo Agencia en UAT + Sumate en staging" · M5 "4
-   plataformas en producción + documentación". (Contenidos redactados por la IA,
-   pendientes de visto bueno del dueño.)
-6. **Mantenimiento** `#mantenimiento`: **USD 225 por sistema, por mes + IVA**, con
-   caja destacada "Las 4 plataformas USD 900 / mes + IVA". Bullets del plan:
-   soporte correctivo de las 4, monitoreo continuo con alertas, actualizaciones de
-   seguridad mensuales, informe mensual con cumplimiento del SLA (NO prometer
-   "bolsa de horas"). Tabla SLA (tarjetas en mobile, tabla en ≥sm): **Crítica < 2 hs
-   todos los días · Alta < 8 hs · Normal < 24 hs** (badge "Crítica 24/7").
-   Grilla **"Qué garantiza el servicio, mes a mes"** con 7 compromisos:
-   01 Informe mensual automático (destacada, doble ancho: PDF día 1 con tickets,
-   tiempos vs SLA, uptime, horas usadas, mejoras) · 02 Monitoreo proactivo con
-   alertas · 03 SLA por severidad, medido · 04 Portal de tickets propio ·
-   05 Revisión trimestral (30 min) · 06 Actualizaciones de seguridad mensuales ·
-   07 Backup verificado mensual (se restaura y documenta). Tarjeta "Portal de
-   soporte integrado con trazabilidad completa" (4 mini-cards: ticket con
-   historial, estado en tiempo real, SLA medido, reporte mensual).
-7. **Inversión** `#inversion`: número grande **USD 35.500** + "más IVA" (entra con
-   blur→foco). Mini-stats 4/5/6/0 (plataformas/meses/pagos/costos ocultos).
-   Cronograma de pagos: **6 pagos mensuales IGUALES de USD 5.916,67 + IVA**, uno
-   por mes contra etapa cumplida (Firma/Anticipo + M1..M5 con su entregable).
-   Nota: "El total se divide en 6 pagos mensuales iguales de USD 5.916,67 + IVA, y
-   cada uno se libera contra entregable validado por el equipo de DAC." (La suma da
-   35.500,02 — el dueño eligió pagos iguales sabiéndolo.)
-   ⚠ Pregunta abierta: si el 1er pago es a la firma o contra mes 1 cumplido.
-8. **Cierre** `#cierre`: "Empecemos a construir.", párrafo compromiso `[PENDIENTE]`,
-   tarjeta mailto `info@digitalbuilders.net`, **Validez: 30 días — hasta el 22 de
-   setiembre de 2026**, y la línea "Esta propuesta fue construida con las mismas
-   tecnologías y estándares que proponemos para sus sitios."
+### 2.3 Secciones (v3 set-2026 · menú fijo con anclas, scroll-spy, índice lateral de 11)
+Orden: 01 Inicio · 02 Resumen · 03 Proyectos · 04 Inteligencia aplicada (`#ia`) ·
+05 Metodología · 06 Cronograma (`#roadmap`) · 07 Seguridad (`#seguridad`) ·
+08 Servicio mensual (`#mantenimiento`) · 09 Inversión · 10 Supuestos
+(`#supuestos`) · 11 Cierre. El menú móvil numera 01-10 (sin Inicio). Los textos
+salen PALABRA POR PALABRA de `docs/gen_propuesta_v3.py` (fuente exacta; los PDF
+en `docs/` y `public/docs/`).
 
-Placeholders SIEMPRE visibles en gris itálica `[PENDIENTE: …]` (clase `.pending`),
-nunca lorem ipsum.
+1. **Hero** `#inicio`: eyebrow "Propuesta de desarrollo · Setiembre 2026", H1
+   "Propuesta Técnica y Comercial" + subtítulo "Proyecto Sitios Web 2027",
+   4 chips, bloque "Preparada por", CTA "Ver la propuesta".
+2. **Resumen** `#resumen`: 2 párrafos exactos (plazo 5-6 meses; relevamiento
+   funcional de 100 puntos) + recuadro "Tres definiciones" + métricas
+   **4 plataformas · 6 meses de proyecto · Entregables validados cada 30 días ·
+   2 módulos de IA incluidos** + tabla de inversión resumida (32.500 / 1.500 /
+   500 / 400 opcional). PROHIBIDO reintroducir horas o "228 requisitos".
+3. **Proyectos** `#proyectos`: 5 tarjetas (los 4 sitios + Base transversal),
+   descripciones definitivas, acordeones con los bloques del Anexo I (código +
+   título + marca INCLUIDO verde / SUJETO A SERVICIO DE TERCEROS ámbar /
+   VERSIÓN INICIAL azul; SIN mes objetivo), botón "Ver el detalle en el portal"
+   → `/proyectos/{slug}`, maquetas `[PENDIENTE]` (las provee el dueño) y botón
+   de descarga del Anexo I.
+4. **Inteligencia aplicada** `#ia`: intro exacta + tarjetas "A — La Intranet que
+   responde" y "B — El portal de empleo que lee los CV" (Qué hace / Cómo
+   funciona / El resultado, exactos) + 4 mini-cards (qué incluye la operación,
+   implementación, límites, primer mes bonificado). Acentos #8FCCF0 / #10B981.
+5. **Metodología** `#metodologia`: flujo Construimos → Lo mostramos → DAC lo
+   prueba → Se firma; 4 tarjetas exactas (Avance validado cada mes ·
+   Validaciones quincenales · Testing en 3 capas · Alcance escrito); bloque de
+   equipo (Santiago Bouvier único interlocutor · por DAC: Mario Secchi y
+   Sebastián Ciapessoni) + párrafo de Digital Builders. Sin siglas hacia el
+   cliente (no UAT/QA/CI/SEO-UX/CPI/pentest) y sin comparaciones con nadie.
+6. **Cronograma** `#roadmap`: matriz exacta de 5 carriles (DAC/GA/Sumate/
+   Intranet/Transversal) × 6 meses. Titulares: **Cimientos · Toma forma · Se
+   opera · Transaccional · Cierre · Estabilización** (mes 6 con el mismo peso
+   visual, sin "sin costo adicional"). Nota al pie de servicios de terceros y
+   recuadro "Compromisos del cronograma", exactos.
+7. **Seguridad** `#seguridad`: intro + 7 principios exactos (Mínima custodia ·
+   Permisos a nivel de dato · Accesos y credenciales · Operación defensiva ·
+   Resguardo · Módulos de IA · Verificación externa) + badges (Ley 18.331 etc.,
+   movidos desde metodología).
+8. **Servicio mensual** `#mantenimiento`: **USD 2.000 + IVA = Mantenimiento
+   integral 1.500 + Operación IA 500**, dos cards con viñetas exactas; niveles
+   de respuesta: **Crítica (plataforma caída o pagos sin funcionar) < 2 h, días
+   hábiles 8-20 h, guardia fines de semana y feriados 9-18 h para caídas
+   totales · Alta < 8 h hábiles · Normal < 24 h hábiles** (NO existe "Crítica
+   24/7"); condiciones exactas (12 meses mínimos, preaviso 90 días, ajuste por
+   inflación de EE.UU., IA independiente); card opcional Bolsa evolutiva 400.
+9. **Inversión** `#inversion`: **USD 32.500 + IVA**; mini-stats 4/6/6/2; **6
+   cuotas mensuales de USD 5.417 + IVA, la primera al inicio y las siguientes
+   cada 30 días, NO condicionadas a entregables**; fila de implementación IA
+   incluida al contratar la operación por 12 meses.
+10. **Supuestos** `#supuestos`: los 8 supuestos exactos, lista numerada sobria.
+11. **Cierre** `#cierre`: agradecimiento exacto, 3 próximos pasos ("Con la firma
+    se emite la primera cuota"), **validez 60 días desde el envío** con la fecha
+    en `#fecha-envio[data-validez]` (valor inicial `[FECHA DE ENVÍO]`, lo
+    completa el dueño), botones de descarga de ambos PDF, línea de "mismas
+    tecnologías" y mailto.
+
+Placeholders permitidos que quedan: las 4 maquetas panorámicas y
+`[FECHA DE ENVÍO]`. Nada más.
 
 ### 2.4 Capa de movimiento (JS vanilla, un solo bucle rAF)
 - Titulares `data-split`: se parten en líneas reales (medidas por offsetTop tras
@@ -162,11 +166,12 @@ incrustar el CSS con el mismo comentario marcador. Verificar SIEMPRE offline
 ## 3 · PIEZA B — LA GUÍA (`public/guia/index.html`)
 
 Página estática autocontenida para mandarle a DAC junto a la invitación.
-Misma estética (CSS artesanal, sin Tailwind). Contenido: título "Cómo validar el
-alcance de sus proyectos", sub con "48 funcionalidades y 228 requisitos", 5 pasos
-(Ingresen con su correo / Elijan un proyecto / Recorran el cronograma / Marquen el
-estado — con los 4 chips de colores explicados / Comenten), nota "No hace falta
-hacerlo de una vez", pie con mail. Trata de "ustedes" al equipo de DAC.
+Misma estética (CSS artesanal, sin Tailwind). Contenido: título "Cómo vamos a
+validar el alcance durante el proyecto", sub sin números hardcodeados, aviso
+"Hasta la firma, el portal está en modo lectura", 5 pasos (Ingresen con su
+correo / Elijan un proyecto / Recorran el cronograma / Marquen el estado —
+cuando la validación esté habilitada, con los 4 chips explicados / Comenten),
+nota "No hace falta hacerlo de una vez", pie con mail. Trata de "ustedes".
 
 ---
 
@@ -230,11 +235,13 @@ Contenido max-w-3xl. Estados: pendiente `#9CA3AF` · validado `#10B981` ·
 con_cambios `#F5A524` · no_va `#EF4444` (constante `ESTADOS` con color+fondo).
 
 ### 4.4 Capa de datos (`src/lib/portal.ts`)
-Tipos desde `Database` generado. `ESTADOS`, `ORDEN_ESTADOS`,
-`MESES = [Cimientos, DAC toma forma, DAC opera · GA nace, Transaccional,
-Cierre total — producción, Colchón]`, `mesesDe("Mes 2"|"Meses 2-3") → number[]`,
+Tipos desde `Database` generado (+ extensión manual `marca` hasta regenerar
+tipos). `VALIDACION_ABIERTA` (false hasta la firma), `ESTADOS`, `ORDEN_ESTADOS`,
+`MARCAS` (incluido/terceros/inicial/evolutivo con color+fondo),
+`MESES = [Cimientos, Toma forma, Se opera, Transaccional, Cierre,
+Estabilización]`, `mesesDe("Mes 2"|"Meses 2-3") → number[]`,
 `etiquetaAutor`. Fetchers: `fetchProyectos` (order orden), `fetchAvance`
-(48 filas, agrupa por proyecto/estado), `fetchProyecto(slug)`,
+(agrupa por proyecto/estado), `fetchProyecto(slug)`,
 `fetchFuncionalidades(proyectoId)` (funcionalidades + `validaciones(*)` embebido,
 y comentarios con `autor:profiles(id,nombre,lado)` + `funcionalidades!inner` para
 filtrar por proyecto). `cambiarEstado` (update + `.select()`; 0 filas ⇒ throw "La
@@ -285,43 +292,53 @@ escribe este chat, las ejecuta el dueño en el SQL Editor). Todas idempotentes.
 
 ---
 
-## 6 · DATOS CARGADOS (del pliego, YA en la base)
+## 6 · DATOS CARGADOS (Anexo I v3, set-2026)
 
-5 proyectos / **48 funcionalidades / 228 requisitos**:
+La migración `20260918190000_alcance_anexo1_v3.sql` (GENERADA por
+`scripts/anexo_a_sql.py` desde `docs/gen_anexo1.py` — regenerar con el script,
+no editar a mano) borra el alcance anterior y carga **53 bloques** con columna
+nueva `funcionalidades.marca` (incluido/terceros/inicial/evolutivo):
 
-| slug | nombre | color | bajada | bloques | requisitos | prefijo códigos |
-|---|---|---|---|---|---|---|
-| transversal | Base transversal | #10B981 | Aplica a los 4 sitios | 7 | 40 | TR- |
-| dac | DAC | #3B82F6 | Sitio institucional | 15 | 85 | DAC- |
-| grupo-agencia | Grupo Agencia | #F97316 | Plataforma transaccional | 11 | 47 | GA- |
-| sumate | Sumate | #F5A524 | Sitio de campaña | 4 | 23 | SU- |
-| intranet | Intranet | #8B5CF6 | Plataforma interna | 11 | 33 | IN- |
+| slug | nombre | color | bajada | bloques | códigos |
+|---|---|---|---|---|---|
+| transversal | Base transversal | #10B981 | Aplica a los 4 sitios | 7 | T.1-T.7 |
+| dac | DAC | #3B82F6 | Encomiendas y servicios logísticos | 15 | D.1-D.15 |
+| grupo-agencia | Grupo Agencia | #F97316 | Venta de pasajes | 13 | G.1-G.13 |
+| sumate | Sumate | #F5A524 | Trabajá con nosotros | 7 | S.1-S.6 + IA.2 |
+| intranet | Intranet | #8B5CF6 | Portal de colaboradores | 11 | I.1-I.10 + IA.1 |
 
-`mes_objetivo` formato "Mes N" / "Meses A-B" (los TR de requisitos generales van
-sin mes). Distribución: M1×4, M2×5, M3×8, M4×7, M5×21, rangos 2-3 y 3-4.
+`detalle` = un requisito por línea + última línea "Definición del relevamiento:
+…" cuando existe. `mes_objetivo` según la matriz del cronograma (T.1-T.5 M1,
+T.6 M6, T.7 M3; D/G/S/I/IA según el mapa del script). Marcas no-incluido:
+D.6, D.8, D.13 = terceros · G.13 = inicial. La migración la aplica el dueño en
+el SQL Editor; NO recarga `estimaciones`.
 
-**INTERNO — nunca mostrar al cliente:** horas por proyecto en `estimaciones`:
-transversal 130 · DAC ~400 · GA ~299 (doc decía ~245+extras) · Sumate 85–93 ·
-Intranet 167 · total ~1.081–1.089 con coordinación. Responsables: Santiago,
-Kaoru, Ambos, Transversal. Se limpiaron 2 fugas del PDF: "(trabajo con Kaoru)" en
-un requisito y la tabla de horas pegada al final del último requisito de Intranet.
-Fuente: PDF "DAC_desglose_hiperdetallado" (9 págs; bullets = char \x7f).
+**INTERNO — nunca mostrar al cliente:** las horas viven solo en el Excel del
+dueño (la tabla `estimaciones` queda vacía tras la migración y no se recarga).
+Nombres del equipo interno fuera de toda superficie; los únicos nombres
+públicos son los que el dueño puso en la propuesta (Santiago Bouvier; por DAC,
+Mario Secchi y Sebastián Ciapessoni).
 
 ---
 
 ## 7 · DECISIONES TOMADAS (no re-litigar sin el dueño)
 
-1. 6 pagos **iguales** de 5.916,67 + IVA (el dueño lo eligió sobre 5×5.917+5.915).
-2. Mantenimiento 225 + IVA por sistema; 900 + IVA las 4. Sin bolsa de horas.
-3. Validez 30 días (hasta 22/09/2026) — recomendación aceptada.
-4. Métrica pública: "228 requisitos relevados" (no "51 funcionalidades": no cuadraba).
-5. Solo `dac` valida; DB comenta/propone. Comentarios internos solo DB.
-6. Horas JAMÁS visibles al cliente (ni en pantalla, ni API, ni acta): tabla aparte.
-7. Ver es libre con la clave; escribir exige invitación (atribución del acta).
-8. La clave compartida es cortina asumida; el resto lo protege RLS de verdad.
-9. Estados: pendiente/validado/con_cambios/no_va ("Va con cambios" agregado).
-10. Portal con el MISMO lenguaje visual de la propuesta y organizado
-    cronológicamente (feedback fuerte del dueño tras una v1 genérica).
+1. **Números finales set-2026: 32.500 / 2.000 mensual (1.500 + 500 IA) /
+   evolutiva 400 / 6 cuotas de 5.417 no condicionadas / validez 60 días /
+   horas nunca públicas / portal en modo lectura hasta la firma.**
+2. Contenido de la web = palabra por palabra los PDF v3; ante contradicción
+   ganan los scripts generadores (`docs/gen_propuesta_v3.py`, `gen_anexo1.py`).
+3. Sin comparaciones con proveedores anteriores ni descripciones de la
+   operación interna de DAC; sin siglas técnicas hacia el cliente.
+4. Solo `dac` valida; DB comenta/propone. Comentarios internos solo DB.
+5. Horas JAMÁS visibles al cliente (ni pantalla, ni API, ni acta).
+6. Ver es libre con la clave; escribir exige invitación (atribución del acta).
+7. La clave compartida es cortina asumida; el resto lo protege RLS de verdad.
+8. Estados: pendiente/validado/con_cambios/no_va.
+9. Portal con el MISMO lenguaje visual de la propuesta, organizado
+   cronológicamente, y reposicionado como herramienta de aceptación por módulo
+   DURANTE el proyecto: `VALIDACION_ABIERTA=false` en `src/lib/portal.ts` hasta
+   la firma (el dueño lo pone en `true` al inicio; la RLS no cambia).
 
 ## 8 · ERRORES YA PAGADOS (no repetir)
 
@@ -342,17 +359,17 @@ Fuente: PDF "DAC_desglose_hiperdetallado" (9 págs; bullets = char \x7f).
 
 ## 9 · PENDIENTES
 
-**Del dueño:** correr migraciones nuevas en SQL Editor si faltan (lectura anon +
-realtime); cargar `invitados` reales (DB primero, DAC después); probar login;
-confirmar si el 1er pago es a la firma o contra mes 1; dar visto bueno a los
-textos que la IA redactó (roadmap por mes, hitos de pago, garantías).
-
-**De contenido (propuesta):** 12 `[PENDIENTE]`: 3 párrafos del resumen, 4
-descripciones de proyecto, párrafo de compromiso, 4 maquetas panorámicas.
+**Del dueño:** correr `20260918190000_alcance_anexo1_v3.sql` en el SQL Editor
+(y antes las de lectura anon + realtime si faltan); completar la fecha de envío
+en `#fecha-envio` (texto visible + `data-validez`); proveer las 4 maquetas
+panorámicas; cargar `invitados` reales; publicar desde Lovable; al firmar,
+poner `VALIDACION_ABIERTA=true`.
 
 **De desarrollo:** Paso 6 — **acta de alcance en PDF** desde `/proyectos`
 (estados finales + comentarios públicos + quién validó; sin horas ni internos).
 Futuro: este portal será la base del sistema de tickets del mantenimiento.
+Cuando Lovable regenere los tipos de Supabase, quitar la extensión manual de
+`marca` en `src/lib/portal.ts`.
 
 ## 10 · CÓMO VERIFICAR (estándar del proyecto)
 
