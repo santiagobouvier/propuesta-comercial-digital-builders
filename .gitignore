@@ -34,3 +34,4 @@ dist-ssr
 # Variables de entorno (hoy solo trae claves publicas, pero que no se suba nunca un secreto)
 .env
 .env.local
+__pycache__/
